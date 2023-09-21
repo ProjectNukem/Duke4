@@ -1,5 +1,6 @@
 *
 !*/
+Build/
 !.gitignore
 !CMakeLists.txt
 !CMakePresets.json
@@ -12,3 +13,7 @@
 !*.cpp
 !*.hpp
 !*.asm
+
+# Generated
+xcore/flagdata.cpp
+xcore/memoff.inc
