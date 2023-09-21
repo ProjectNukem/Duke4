@@ -10,10 +10,18 @@ Build/
 !*.c
 !*.uc
 !*.rc
+!*.ah
 !*.cpp
 !*.hpp
 !*.asm
+!*.inc
+!*.lib
+
+# Resources
+!*/Res/*.bmp
+!*/Res/*.ico
 
 # Generated
 xcore/flagdata.cpp
 xcore/memoff.inc
+System/*.lib
