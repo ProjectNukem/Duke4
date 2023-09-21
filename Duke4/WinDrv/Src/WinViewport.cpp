@@ -293,6 +293,7 @@ void UWindowsViewport::OpenWindow( DWORD InParentWindow, UBOOL IsTemporary, INT 
 			UpdateWindow( Window->hWnd );
 	}
 
+	TryRenderDevice( TEXT("ini:Engine.Engine.GameRenderDevice"), NewX, NewY, IsTemporary?ColorBytes:INDEX_NONE, (!GIsEditor && GetOuterUWindowsClient()->StartupFullscreen)?1:0 );
 	if( !RenDev )
 	{
 		debugf( NAME_Log, TEXT("Trying D3DDrv.D3DRenderDevice") );
