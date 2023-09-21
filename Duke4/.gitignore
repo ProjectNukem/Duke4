@@ -3,3 +3,12 @@
 !.gitignore
 !CMakeLists.txt
 !CMakePresets.json
+
+# Sources
+!*.h
+!*.c
+!*.uc
+!*.rc
+!*.cpp
+!*.hpp
+!*.asm
