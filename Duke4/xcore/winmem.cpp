@@ -27,6 +27,7 @@ class MemDebug;
 
 class MallocInfo
 {
+	friend class XChain<MallocInfo>;
 public:
 	U32 *ptr;
 	U32	size;
