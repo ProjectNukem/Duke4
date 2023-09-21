@@ -33,8 +33,8 @@ class WDlgGroup : public WDialog
 	// Constructor.
 	WDlgGroup( UObject* InContext, WBrowser* InOwnerWindow )
 	:	WDialog			( TEXT("Group"), IDDIALOG_GROUP, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgGroup::OnOk) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgGroup::EndDialogFalse) )
 	,	NameEdit		( this, IDEC_NAME )
 	{
 	}

@@ -177,26 +177,26 @@ class WPageFlags : public WSurfacePropPage
 		Finalize();
 
 		// Delegates.
-		RelativeCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		MaskedCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		TranslucentCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		ForceViewzoneCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		ModulatedCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		FakeBackdropCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		TwoSidedCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		UPanCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		VPanCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		HighShadowDetailCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		LowShadowDetailCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		NoSmoothCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		SmallWavyCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		BrightCornersCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		SpecialLitCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		NoBoundsRejectCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		UnlitCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		PortalCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		MirrorCheck->ClickDelegate = FDelegate(this, (TDelegate)OnButtonClicked);
-		TagEdit->ChangeDelegate = FDelegate(this, (TDelegate)OnTagChanged);
+		RelativeCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		MaskedCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		TranslucentCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		ForceViewzoneCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		ModulatedCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		FakeBackdropCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		TwoSidedCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		UPanCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		VPanCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		HighShadowDetailCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		LowShadowDetailCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		NoSmoothCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		SmallWavyCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		BrightCornersCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		SpecialLitCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		NoBoundsRejectCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		UnlitCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		PortalCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		MirrorCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnButtonClicked);
+		TagEdit->ChangeDelegate = FDelegate(this, (TDelegate)&WPageFlags::OnTagChanged);
 	}
 	void OnDestroy()
 	{
@@ -471,21 +471,21 @@ class WPagePanRotScale : public WSurfacePropPage
 		Finalize();
 
 		// Delegates.
-		PanU1Button->ClickDelegate = FDelegate(this, (TDelegate)OnPanU1Clicked);
-		PanU4Button->ClickDelegate = FDelegate(this, (TDelegate)OnPanU4Clicked);
-		PanU16Button->ClickDelegate = FDelegate(this, (TDelegate)OnPanU16Clicked);
-		PanU64Button->ClickDelegate = FDelegate(this, (TDelegate)OnPanU64Clicked);
-		PanV1Button->ClickDelegate = FDelegate(this, (TDelegate)OnPanV1Clicked);
-		PanV4Button->ClickDelegate = FDelegate(this, (TDelegate)OnPanV4Clicked);
-		PanV16Button->ClickDelegate = FDelegate(this, (TDelegate)OnPanV16Clicked);
-		PanV64Button->ClickDelegate = FDelegate(this, (TDelegate)OnPanV64Clicked);
-		ApplyButton->ClickDelegate = FDelegate(this, (TDelegate)OnApplyClicked);
-		Apply2Button->ClickDelegate = FDelegate(this, (TDelegate)OnApply2Clicked);
-		FlipUButton->ClickDelegate = FDelegate(this, (TDelegate)OnFlipUClicked);
-		FlipVButton->ClickDelegate = FDelegate(this, (TDelegate)OnFlipVClicked);
-		Rot45Button->ClickDelegate = FDelegate(this, (TDelegate)OnRot45Clicked);
-		Rot90Button->ClickDelegate = FDelegate(this, (TDelegate)OnRot90Clicked);
-		GetScaleButton->ClickDelegate = FDelegate(this, (TDelegate)OnGetScaleClicked);
+		PanU1Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnPanU1Clicked);
+		PanU4Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnPanU4Clicked);
+		PanU16Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnPanU16Clicked);
+		PanU64Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnPanU64Clicked);
+		PanV1Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnPanV1Clicked);
+		PanV4Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnPanV4Clicked);
+		PanV16Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnPanV16Clicked);
+		PanV64Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnPanV64Clicked);
+		ApplyButton->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnApplyClicked);
+		Apply2Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnApply2Clicked);
+		FlipUButton->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnFlipUClicked);
+		FlipVButton->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnFlipVClicked);
+		Rot45Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnRot45Clicked);
+		Rot90Button->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnRot90Clicked);
+		GetScaleButton->ClickDelegate = FDelegate(this, (TDelegate)&WPagePanRotScale::OnGetScaleClicked);
 
 		// Initialize controls.
 		SimpleScaleCombo->AddString( TEXT("0.0625" ) );
@@ -711,9 +711,9 @@ class WPageAlignment : public WSurfacePropPage
 		Finalize();
 
 		// Delegates.
-		AlignButton->ClickDelegate = FDelegate(this, (TDelegate)OnAlignClick);
-		AlignList->DoubleClickDelegate = FDelegate(this, (TDelegate)OnAlignClick);
-		AlignList->SelectionChangeDelegate = FDelegate(this, (TDelegate)AlignListSelectionChange);
+		AlignButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageAlignment::OnAlignClick);
+		AlignList->DoubleClickDelegate = FDelegate(this, (TDelegate)&WPageAlignment::OnAlignClick);
+		AlignList->SelectionChangeDelegate = FDelegate(this, (TDelegate)&WPageAlignment::AlignListSelectionChange);
 
 		// Initialize controls.
 		for( INT x = 0 ; GAlignTypes[x].ID != -1 ; x++ )

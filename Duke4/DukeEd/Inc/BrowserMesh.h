@@ -43,8 +43,8 @@ class WDlgNewMesh : public WDialog
 	// Constructor.
 	WDlgNewMesh( UObject* InContext, WBrowser* InOwnerWindow )
 	:	WDialog			( TEXT("New Mesh"), IDDIALOG_NEW_MESH, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgNewMesh::OnOk) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgNewMesh::EndDialogFalse) )
 	,	PackageEdit		( this, IDEC_PACKAGE_MESH )
 	,	GroupEdit		( this, IDEC_GROUP_MESH )
 	,	NameEdit		( this, IDEC_NAME_MESH )
@@ -191,15 +191,15 @@ class WSequenceFrame : public WDialog
 	{
 		WDialog::OnInitDialog();
 
-		PackageCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)OnPackageSelChange);
-		GroupCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)OnGroupSelChange);
-		MeshCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)OnMeshSelChange);
-		AnimCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)OnAnimSelChange);
-		PlayButton.ClickDelegate = FDelegate(this, (TDelegate)OnPlayClick);
-		ForwardButton.ClickDelegate = FDelegate(this, (TDelegate)OnForwardClick);
-		BackButton.ClickDelegate = FDelegate(this, (TDelegate)OnBackClick);
-		RenDevButton.ClickDelegate = FDelegate(this, (TDelegate)OnRenDevChange);
-		ConfigButton.ClickDelegate = FDelegate(this, (TDelegate)OnConfigClick);
+		PackageCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnPackageSelChange);
+		GroupCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnGroupSelChange);
+		MeshCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnMeshSelChange);
+		AnimCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnAnimSelChange);
+		PlayButton.ClickDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnPlayClick);
+		ForwardButton.ClickDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnForwardClick);
+		BackButton.ClickDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnBackClick);
+		RenDevButton.ClickDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnRenDevChange);
+		ConfigButton.ClickDelegate = FDelegate(this, (TDelegate)&WSequenceFrame::OnConfigClick);
 
 		::EnableWindow( ConfigEdit.hWnd, 0 );
 

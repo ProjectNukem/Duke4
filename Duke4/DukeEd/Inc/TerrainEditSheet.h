@@ -68,11 +68,11 @@ class WPageSoftSelection : public WPropertyPage
 		RadiusEdit->SetText(TEXT("1024"));
 
 		// Delegates.
-		SelectButton->ClickDelegate = FDelegate(this, (TDelegate)OnSelectClicked);
-		DeselectButton->ClickDelegate = FDelegate(this, (TDelegate)OnDeselectClicked);
-		ShowGridButton->ClickDelegate = FDelegate(this, (TDelegate)OnShowGridClicked);
-		ResetMoveButton->ClickDelegate = FDelegate(this, (TDelegate)OnResetMoveClicked);
-		DeselectAllButton->ClickDelegate = FDelegate(this, (TDelegate)OnDeselectAllClicked);
+		SelectButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageSoftSelection::OnSelectClicked);
+		DeselectButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageSoftSelection::OnDeselectClicked);
+		ShowGridButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageSoftSelection::OnShowGridClicked);
+		ResetMoveButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageSoftSelection::OnResetMoveClicked);
+		DeselectAllButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageSoftSelection::OnDeselectAllClicked);
 	}
 	void OnDestroy()
 	{

@@ -369,8 +369,8 @@ public: \
 			GPackage, \
 			StaticConfigName(), \
 			RF_Public | RF_Standalone | RF_Transient | RF_Native, \
-			(void(*)(void*))TClass::InternalConstructor, \
-			(void(UObject::*)())TClass::StaticConstructor \
+			(void(*)(void*))&TClass::InternalConstructor, \
+			(void(UObject::*)())&TClass::StaticConstructor \
 		); \
 		extern "C" DLL_EXPORT UClass* autoclass##TClass;\
 		DLL_EXPORT UClass* autoclass##TClass = TClass::StaticClass();
@@ -427,6 +427,7 @@ class CORE_API UObject
 	friend class ULinkerSave;
 	friend class UPackageMap;
 	friend class FArchiveTagUsed;
+	friend class URender;
 	friend struct FObjectImport;
 	friend struct FObjectExport;
 

@@ -31,8 +31,8 @@ class WDlgNewClass : public WDialog
 	// Constructor.
 	WDlgNewClass( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog			( TEXT("New Class"), IDDIALOG_NEW_CLASS, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgNewClass::OnOk) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgNewClass::EndDialogFalse) )
 	,	ParentLabel		( this, IDSC_PARENT )
 	,	PackageEdit		( this, IDEC_PACKAGE )
 	,	NameEdit		( this, IDEC_NAME )
@@ -194,11 +194,11 @@ class WBrowserActor : public WBrowser
 		BrowserActorContext = LoadMenuIdX(hInstance, IDMENU_BrowserActor_Context);
 
 		pInfoActorCheck = new WCheckBox( this, IDCK_INFOACTOR );
-		pInfoActorCheck->ClickDelegate = FDelegate(this, (TDelegate)OnInfoActorClick);
+		pInfoActorCheck->ClickDelegate = FDelegate(this, (TDelegate)&WBrowserActor::OnInfoActorClick);
 		pInfoActorCheck->OpenWindow( 1, 0, 0, 1, 1, TEXT("InfoActor Only") );
 
 		pRenderActorCheck = new WCheckBox( this, IDCK_RENDERACTOR );
-		pRenderActorCheck->ClickDelegate = FDelegate(this, (TDelegate)OnRenderActorClick);
+		pRenderActorCheck->ClickDelegate = FDelegate(this, (TDelegate)&WBrowserActor::OnRenderActorClick);
 		pRenderActorCheck->OpenWindow( 1, 0, 0, 1, 1, TEXT("RenderActor Only") );
 
 		pPinLabel = new WLabel( this, IDSC_PINLABEL );
@@ -206,9 +206,9 @@ class WBrowserActor : public WBrowser
 
 		pTreeView = new WTreeView( this, IDTV_TREEVIEW );
 		pTreeView->OpenWindow( 1, 1, 0, 0, 1 );
-		pTreeView->SelChangedDelegate = FDelegate(this, (TDelegate)OnTreeViewSelChanged);
-		pTreeView->ItemExpandingDelegate = FDelegate(this, (TDelegate)OnTreeViewItemExpanding);
-		pTreeView->DblClkDelegate = FDelegate(this, (TDelegate)OnTreeViewDblClk);
+		pTreeView->SelChangedDelegate = FDelegate(this, (TDelegate)&WBrowserActor::OnTreeViewSelChanged);
+		pTreeView->ItemExpandingDelegate = FDelegate(this, (TDelegate)&WBrowserActor::OnTreeViewItemExpanding);
+		pTreeView->DblClkDelegate = FDelegate(this, (TDelegate)&WBrowserActor::OnTreeViewDblClk);
 		
 		pPackagesList = new WCheckListBox( this, IDLB_PACKAGES );
 		pPackagesList->OpenWindow( 1, 0, 0, 1 );

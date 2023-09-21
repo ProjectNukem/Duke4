@@ -159,7 +159,7 @@ UBOOL FWaveModInfo::ReadWaveInfo( TArray<BYTE>& WavData )
 	BYTE cChunkToFind[8] = "fmt ";
 
 	// Chunk found ?
-	if( !FindChunk( RiffChunk, cChunkToFind ) )
+	if( !FindChunk( *(const FRiffChunkOld**)&RiffChunk, cChunkToFind ) )
 		return 0;
 
 	FmtChunk = (FFormatChunk*)((BYTE*)RiffChunk + 8);
@@ -178,7 +178,7 @@ UBOOL FWaveModInfo::ReadWaveInfo( TArray<BYTE>& WavData )
 	cChunkToFind[3] = 'a';
 
 	// Chunk found ?
-	if( !FindChunk( RiffChunk, cChunkToFind ) )
+	if( !FindChunk( *(const FRiffChunkOld**)&RiffChunk, cChunkToFind ) )
 		return 0;
 
 	pSampleDataStart	= (BYTE*)RiffChunk + 8;
@@ -199,7 +199,7 @@ UBOOL FWaveModInfo::ReadWaveInfo( TArray<BYTE>& WavData )
 
 	// Chunk found ? smpl chunk is optional.
 	// Find the first sample-loop structure, and the total number of them.
-	if( FindChunk( RiffChunk, cChunkToFind ) )
+	if( FindChunk( *(const FRiffChunkOld**)&RiffChunk, cChunkToFind ) )
 	{
 		FSampleChunk* pSampleChunk =  (FSampleChunk*)( (BYTE*)RiffChunk + 8);
 		SampleLoopsNum  = pSampleChunk->cSampleLoops; // Number of tSampleLoop structures.

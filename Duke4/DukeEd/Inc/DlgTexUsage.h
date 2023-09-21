@@ -21,8 +21,8 @@ class WDlgTexUsage : public WDialog
 	// Constructor.
 	WDlgTexUsage( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog		( TEXT("Teture Usage"), IDDIALOG_TEXUSAGE, InOwnerWindow )
-	,	DoneButton	( this, IDTU_DONE, FDelegate(this,(TDelegate)EndDialogTrue) )
-	,	ViewButton	( this, IDTU_VIEW, FDelegate(this,(TDelegate)OnViewButton) )
+	,	DoneButton	( this, IDTU_DONE, FDelegate(this,(TDelegate)&WDlgTexUsage::EndDialogTrue) )
+	,	ViewButton	( this, IDTU_VIEW, FDelegate(this,(TDelegate)&WDlgTexUsage::OnViewButton) )
 	,	TexNameLabel	(this, IDC_TUR_TEXNAME )
 	,	TexCountLabel	(this, IDC_TUR_TEXCOUNT )
 	,	SurfaceBrush ( NULL )

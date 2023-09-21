@@ -1547,7 +1547,7 @@ FCheckResult* ULevel::MultiLineCheck
 	FCheckResult* Result = NULL;
 	if( NumHits )
 	{
-		appQsort( Hits, NumHits, sizeof(Hits[0]), (QSORT_COMPARE)CompareHits );
+		appQsort( Hits, NumHits, sizeof(Hits[0]), (QSORT_COMPARE)&CompareHits );
 		Result = new(Mem,NumHits)FCheckResult;
 		for( INT i=0; i<NumHits; i++ )
 		{

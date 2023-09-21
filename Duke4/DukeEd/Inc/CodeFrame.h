@@ -36,12 +36,12 @@ class WDlgFindReplace : public WDialog
 	// Constructor.
 	WDlgFindReplace( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog			( TEXT("Find/Replace"), IDDIALOG_FINDREPLACE, InOwnerWindow )
-	,	FindButton			( this, IDPB_FIND,			FDelegate(this,(TDelegate)OnFind) )
-	,	FindNextButton		( this, IDPB_FIND_NEXT,		FDelegate(this,(TDelegate)OnFindNext) )
-	,	FindPrevButton		( this, IDPB_FIND_PREV,		FDelegate(this,(TDelegate)OnFindPrev) )
-	,	ReplaceButton		( this, IDPB_REPLACE,		FDelegate(this,(TDelegate)OnReplace) )
-	,	ReplaceAllButton	( this, IDPB_REPLACE_ALL,	FDelegate(this,(TDelegate)OnReplaceAll) )
-	,	CloseButton			( this, IDPB_CLOSE,			FDelegate(this,(TDelegate)OnCloseButton) )
+	,	FindButton			( this, IDPB_FIND,			FDelegate(this,(TDelegate)&WDlgFindReplace::OnFind) )
+	,	FindNextButton		( this, IDPB_FIND_NEXT,		FDelegate(this,(TDelegate)&WDlgFindReplace::OnFindNext) )
+	,	FindPrevButton		( this, IDPB_FIND_PREV,		FDelegate(this,(TDelegate)&WDlgFindReplace::OnFindPrev) )
+	,	ReplaceButton		( this, IDPB_REPLACE,		FDelegate(this,(TDelegate)&WDlgFindReplace::OnReplace) )
+	,	ReplaceAllButton	( this, IDPB_REPLACE_ALL,	FDelegate(this,(TDelegate)&WDlgFindReplace::OnReplaceAll) )
+	,	CloseButton			( this, IDPB_CLOSE,			FDelegate(this,(TDelegate)&WDlgFindReplace::OnCloseButton) )
 	,	FindCombo			( this, IDCB_FIND )
 	,	ReplaceCombo		( this, IDCB_REPLACE )
 	,	MatchCaseCheck		( this, IDCK_MATCH_CASE)
@@ -613,7 +613,7 @@ class WCodeFrame : public WWindow
 		}
 
 		FilesList.OpenWindow( 1, 0, 0, 0, 1 );
-		FilesList.DoubleClickDelegate = FDelegate(this, (TDelegate)OnFilesListDblClick);
+		FilesList.DoubleClickDelegate = FDelegate(this, (TDelegate)&WCodeFrame::OnFilesListDblClick);
 
 		UpdateStatus( FALSE, TEXT("Ready."));
 //		DlgFindReplace = new WDlgFindReplace( NULL, this );

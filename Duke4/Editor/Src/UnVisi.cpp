@@ -572,7 +572,7 @@ void FEditorVisibility::MakePortals( INT iNode )
 	FPoly Poly = BuildInfiniteFPoly( Model, iNode );
 
 	// Filter the portal through this subtree.
-	MakePortalsClip( iNode, Poly, 0, AddPortal );
+	MakePortalsClip( iNode, Poly, 0, &FEditorVisibility::AddPortal );
 
 	// Make portals for front.
 	if( Model->Nodes(iNode).iFront != INDEX_NONE )
@@ -607,7 +607,7 @@ void FEditorVisibility::MakePortals( INT iNode )
 				Model->Nodes(iOriginalNode).iLeaf[0],
 				Model->Nodes(iOriginalNode).iBack,
 				Poly,
-				BlockPortal,
+				&FEditorVisibility::BlockPortal,
 				INDEX_NONE
 			);
 		}
@@ -1181,7 +1181,7 @@ void FEditorVisibility::AssignAllZones( INT iNode, int Outside )
 				Model->Nodes(iOriginalNode).iLeaf [0],
 				Model->Nodes(iOriginalNode).iChild[0],
 				Poly,
-				TagZonePortalFragment,
+				&FEditorVisibility::TagZonePortalFragment,
 				INDEX_NONE
 			);
 

@@ -129,7 +129,7 @@ FString FString::RightPad( INT ChCount )
 		for( i=0; i<Pad; i++ )
 			Ch[i] = ' ';
 		Ch[i] = 0;
-		return *this + Ch;
+		return *this + (FString)Ch;
 	}
 	else return *this;
 }

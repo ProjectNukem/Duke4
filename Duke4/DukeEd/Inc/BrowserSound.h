@@ -42,10 +42,10 @@ class WDlgImportSound : public WDialog
 	// Constructor.
 	WDlgImportSound( UObject* InContext, WBrowser* InOwnerWindow )
 	:	WDialog			( TEXT("Import Sound"), IDDIALOG_IMPORT_SOUND, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	OkAllButton		( this, IDPB_OKALL,		FDelegate(this,(TDelegate)OnOkAll) )
-	,	SkipButton		( this, IDPB_SKIP,		FDelegate(this,(TDelegate)OnSkip) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgImportSound::OnOk) )
+	,	OkAllButton		( this, IDPB_OKALL,		FDelegate(this,(TDelegate)&WDlgImportSound::OnOkAll) )
+	,	SkipButton		( this, IDPB_SKIP,		FDelegate(this,(TDelegate)&WDlgImportSound::OnSkip) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgImportSound::EndDialogFalse) )
 	,	PackageEdit		( this, IDEC_PACKAGE )
 	,	GroupEdit		( this, IDEC_GROUP )
 	,	NameEdit		( this, IDEC_NAME )
@@ -228,23 +228,23 @@ class WBrowserSound : public WBrowser
 		//
 		pComboPackage = new WComboBox( this, IDCB_PACKAGE );
 		pComboPackage->OpenWindow( 1, 1 );
-		pComboPackage->SelectionChangeDelegate = FDelegate(this, (TDelegate)OnComboPackageSelChange);
+		pComboPackage->SelectionChangeDelegate = FDelegate(this, (TDelegate)&WBrowserSound::OnComboPackageSelChange);
 
 		// GROUP
 		//
 		pComboGroup = new WComboBox( this, IDCB_GROUP );
 		pComboGroup->OpenWindow( 1, 1 );
-		pComboGroup->SelectionChangeDelegate = FDelegate(this, (TDelegate)OnComboGroupSelChange);
+		pComboGroup->SelectionChangeDelegate = FDelegate(this, (TDelegate)&WBrowserSound::OnComboGroupSelChange);
 
 		// SOUND LIST
 		//
 		pListSounds = new WListBox( this, IDLB_SOUNDS );
 		pListSounds->OpenWindow( 1, 0, 0, 0, 1 );
-		pListSounds->DoubleClickDelegate = FDelegate(this, (TDelegate)OnListSoundsDblClick);
+		pListSounds->DoubleClickDelegate = FDelegate(this, (TDelegate)&WBrowserSound::OnListSoundsDblClick);
 
 		// CHECK BOXES
 		//
-		pCheckGroupAll = new WCheckBox( this, IDCK_GRP_ALL, FDelegate(this, (TDelegate)OnGroupAllClick) );
+		pCheckGroupAll = new WCheckBox( this, IDCK_GRP_ALL, FDelegate(this, (TDelegate)&WBrowserSound::OnGroupAllClick) );
 		pCheckGroupAll->OpenWindow( 1, 0, 0, 1, 1, TEXT("All"), 1, 0, BS_PUSHLIKE );
 
 		hWndToolBar = CreateToolbarEx( 

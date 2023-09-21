@@ -22,8 +22,8 @@ class WDlgAddSpecial : public WDialog
 	WDlgAddSpecial( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog			( TEXT("Add Special"), IDDIALOG_ADD_SPECIAL, InOwnerWindow )
 	,	PrefabCombo		( this, IDCB_PREFABS )
-	,	OKButton		( this, IDOK, FDelegate(this,(TDelegate)OnOK) )
-	,	CloseButton	( this, IDPB_CLOSE, FDelegate(this,(TDelegate)OnClose) )
+	,	OKButton		( this, IDOK, FDelegate(this,(TDelegate)&WDlgAddSpecial::OnOK) )
+	,	CloseButton	( this, IDPB_CLOSE, FDelegate(this,(TDelegate)&WDlgAddSpecial::OnClose) )
 	{
 	}
 
@@ -40,7 +40,7 @@ class WDlgAddSpecial : public WDialog
 		PrefabCombo.AddString(TEXT("Transparent Window"));
 		PrefabCombo.AddString(TEXT("Water"));
 		PrefabCombo.AddString(TEXT("Zone Portal"));
-		PrefabCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)OnComboPrefabsSelChange);
+		PrefabCombo.SelectionChangeDelegate = FDelegate(this, (TDelegate)&WDlgAddSpecial::OnComboPrefabsSelChange);
 
 		PrefabCombo.SetCurrent( 3 );
 		OnComboPrefabsSelChange();

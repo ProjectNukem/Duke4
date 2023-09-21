@@ -2436,6 +2436,9 @@ public:
 	// Constructors.
 	FMatrix()
 	{}
+	FMatrix(const FMatrix &Other)
+		: XPlane(Other.XPlane), YPlane(Other.YPlane), ZPlane(Other.ZPlane), WPlane(Other.WPlane)
+	{}
 	FMatrix( FPlane InX, FPlane InY, FPlane InZ )
 	:	XPlane(InX), YPlane(InY), ZPlane(InZ), WPlane(0,0,0,0)
 	{}

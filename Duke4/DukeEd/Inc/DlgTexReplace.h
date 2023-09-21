@@ -23,9 +23,9 @@ class WDlgTexReplace : public WDialog
 	// Constructor.
 	WDlgTexReplace( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog		( TEXT("Replace Textures"), IDDIALOG_TEX_REPLACE, InOwnerWindow )
-	,	Set1Button	( this, IDPB_SET1, FDelegate(this,(TDelegate)OnSet1Button) )
-	,	Set2Button	( this, IDPB_SET2, FDelegate(this,(TDelegate)OnSet2Button) )
-	,	ReplaceButton	( this, IDPB_REPLACE, FDelegate(this,(TDelegate)OnReplaceButton) )
+	,	Set1Button	( this, IDPB_SET1, FDelegate(this,(TDelegate)&WDlgTexReplace::OnSet1Button) )
+	,	Set2Button	( this, IDPB_SET2, FDelegate(this,(TDelegate)&WDlgTexReplace::OnSet2Button) )
+	,	ReplaceButton	( this, IDPB_REPLACE, FDelegate(this,(TDelegate)&WDlgTexReplace::OnReplaceButton) )
 	,	TexName1Label	(this, IDSC_TEX_NAME1 )
 	,	TexName2Label	(this, IDSC_TEX_NAME2 )
 	{

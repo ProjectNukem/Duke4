@@ -9,6 +9,7 @@
 //============================================================================
 #include <direct.h>
 #include <io.h>
+#include <ctype.h>
 #include "Kernel.h"
 #include "StrMain.h"
 

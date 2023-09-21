@@ -116,16 +116,16 @@ class WPageOptions : public WPropertyPage
 		Finalize();
 
 		// Delegates.
-		GeomCheck->ClickDelegate = FDelegate(this, (TDelegate)OnGeomClick);
-		BSPCheck->ClickDelegate = FDelegate(this, (TDelegate)OnBSPClick);
-		LightingCheck->ClickDelegate = FDelegate(this, (TDelegate)OnLightingClick);
-		DefinePathsCheck->ClickDelegate = FDelegate(this, (TDelegate)OnDefinePathsClick);
-		BuildButton->ClickDelegate = FDelegate(this, (TDelegate)OnBuildClick);
-		BuildPathsButton->ClickDelegate = FDelegate(this, (TDelegate)OnBuildPathsClick);
-		BalanceBar->ThumbTrackDelegate = FDelegate(this, (TDelegate)Refresh);
-		BalanceBar->ThumbPositionDelegate = FDelegate(this, (TDelegate)Refresh);
-		PortalBiasBar->ThumbTrackDelegate = FDelegate(this, (TDelegate)Refresh);
-		PortalBiasBar->ThumbPositionDelegate = FDelegate(this, (TDelegate)Refresh);
+		GeomCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageOptions::OnGeomClick);
+		BSPCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageOptions::OnBSPClick);
+		LightingCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageOptions::OnLightingClick);
+		DefinePathsCheck->ClickDelegate = FDelegate(this, (TDelegate)&WPageOptions::OnDefinePathsClick);
+		BuildButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageOptions::OnBuildClick);
+		BuildPathsButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageOptions::OnBuildPathsClick);
+		BalanceBar->ThumbTrackDelegate = FDelegate(this, (TDelegate)&WPageOptions::Refresh);
+		BalanceBar->ThumbPositionDelegate = FDelegate(this, (TDelegate)&WPageOptions::Refresh);
+		PortalBiasBar->ThumbTrackDelegate = FDelegate(this, (TDelegate)&WPageOptions::Refresh);
+		PortalBiasBar->ThumbPositionDelegate = FDelegate(this, (TDelegate)&WPageOptions::Refresh);
 
 		// Initialize controls.
 		GeomCheck->SetCheck( BST_CHECKED );
@@ -359,7 +359,7 @@ class WPageLevelStats : public WPropertyPage
 		Finalize();
 
 		// Delegates.
-		RefreshButton->ClickDelegate = FDelegate(this, (TDelegate)Refresh);
+		RefreshButton->ClickDelegate = FDelegate(this, (TDelegate)&WPageLevelStats::Refresh);
 
 		// Initialize controls.
 	}

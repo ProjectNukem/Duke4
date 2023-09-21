@@ -22,8 +22,8 @@ class WDlgRename : public WDialog
 	// Constructor.
 	WDlgRename( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog				( TEXT("Rename"), IDDIALOG_RENAME, InOwnerWindow )
-	,	CancelButton		( this, IDCANCEL, FDelegate(this,(TDelegate)EndDialogFalse) )
-	,	OKButton			( this, IDOK, FDelegate(this,(TDelegate)OnOK) )
+	,	CancelButton		( this, IDCANCEL, FDelegate(this,(TDelegate)&WDlgRename::EndDialogFalse) )
+	,	OKButton			( this, IDOK, FDelegate(this,(TDelegate)&WDlgRename::OnOK) )
 	,	NameEdit			( this, IDEC_NAME )
 	{
 	}

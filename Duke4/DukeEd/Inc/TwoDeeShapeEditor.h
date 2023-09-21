@@ -2345,12 +2345,12 @@ class W2DShapeEditor : public WWindow
 					FRotator StepRotation( (65536.0f / TotalSides) * side, 0, 0 ), StepRotation2( (65536.0f / TotalSides) * (side+1), 0, 0 );
 
 					FVector vtxPrev = pvtxPrev->TransformVectorBy( GMath.UnitCoords * StepRotation );
-					FVector vtx = pvtx->TransformVectorBy( GMath.UnitCoords * StepRotation );
+					FVector vtx1 = pvtx->TransformVectorBy( GMath.UnitCoords * StepRotation );
 					FVector vtxPrev2 = pvtxPrev->TransformVectorBy( GMath.UnitCoords * StepRotation2 );
 					FVector vtx2 = pvtx->TransformVectorBy( GMath.UnitCoords * StepRotation2 );
 
 					Cmd += *(FString::Printf(TEXT("Vertex   %1.1f, %1.1f, %1.1f\n"),
-						vtx.X, vtx.Y, vtx.Z ));
+						vtx1.X, vtx1.Y, vtx1.Z ));
 					Cmd += *(FString::Printf(TEXT("Vertex   %1.1f, %1.1f, %1.1f\n"),
 						vtxPrev.X, vtxPrev.Y, vtxPrev.Z ));
 

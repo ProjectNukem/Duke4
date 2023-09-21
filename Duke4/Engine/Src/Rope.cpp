@@ -454,7 +454,7 @@ FVector ABoneRope::CalculateDirectionVector
 void CheapBroadcastMessage(AActor* inActor, TCHAR* inFmt, ... )
 { 
 	static TCHAR buf[256];
-	GET_VARARGS( buf, ARRAY_COUNT(buf), inFmt );
+	GET_VARARGS( buf, ARRAY_COUNT(buf), *(const TCHAR**)&inFmt );
 	inActor->Level->eventBroadcastMessage(FString(buf),0,NAME_None);
 }
 

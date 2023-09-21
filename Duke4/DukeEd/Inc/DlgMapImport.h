@@ -24,8 +24,8 @@ class WDlgMapImport : public WDialog
 	// Constructor.
 	WDlgMapImport( WWindow* InOwnerWindow )
 	:	WDialog			( TEXT("Map Import"), IDDIALOG_IMPORT_MAP, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgMapImport::OnOk) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgMapImport::EndDialogFalse) )
 	,	ImportIntoExistingCheck		( this, IDCK_IMPORT_INTO_EXISTING)
 	{
 		bImportIntoExistingCheck = 0;

@@ -5432,7 +5432,7 @@ UBOOL FScriptCompiler::CompileScript
 void VARARGS FScriptCompiler::AddResultText( TCHAR* Fmt, ... )
 {
 	TCHAR TempStr[4096];
-	GET_VARARGS( TempStr, ARRAY_COUNT(TempStr), Fmt );
+	GET_VARARGS( TempStr, ARRAY_COUNT(TempStr), *(const TCHAR**)&Fmt );
 	debugf( NAME_Log, TempStr );
 	if( ErrorText )
 		ErrorText->Log( TempStr );

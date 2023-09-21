@@ -1306,7 +1306,7 @@ protected:
 		INT HashNext;
 		TK Key;
 		TI Value;
-		TPair( TTypeInfo<TK>::ConstInitType InKey, TTypeInfo<TI>::ConstInitType InValue )
+		TPair( typename TTypeInfo<TK>::ConstInitType InKey, typename TTypeInfo<TI>::ConstInitType InValue )
 		: Key( InKey ), Value( InValue )
 		{}
 		TPair()
@@ -1342,7 +1342,7 @@ protected:
 			HashCount /= 2;
 		Rehash();
 	}
-	TI& Add( TTypeInfo<TK>::ConstInitType InKey, TTypeInfo<TI>::ConstInitType InValue )
+	TI& Add( typename TTypeInfo<TK>::ConstInitType InKey, typename TTypeInfo<TI>::ConstInitType InValue )
 	{
 		TPair& Pair   = *new(Pairs)TPair( InKey, InValue );
 		INT    iHash  = (GetTypeHash(Pair.Key) & (HashCount-1));
@@ -1393,14 +1393,14 @@ public:
 		HashCount = 8;
 		Rehash();
 	}
-	TI& Set( TTypeInfo<TK>::ConstInitType InKey, TTypeInfo<TI>::ConstInitType InValue )
+	TI& Set( typename TTypeInfo<TK>::ConstInitType InKey, typename TTypeInfo<TI>::ConstInitType InValue )
 	{
 		for( INT i=Hash[(GetTypeHash(InKey) & (HashCount-1))]; i!=INDEX_NONE; i=Pairs(i).HashNext )
 			if( Pairs(i).Key==InKey )
 				{Pairs(i).Value=InValue; return Pairs(i).Value;}
 		return Add( InKey, InValue );
 	}
-	INT Remove( TTypeInfo<TK>::ConstInitType InKey )
+	INT Remove( typename TTypeInfo<TK>::ConstInitType InKey )
 	{
 		INT Count=0;
 		for( INT i=Pairs.Num()-1; i>=0; i-- )
@@ -1491,18 +1491,18 @@ public:
 			if( Pairs(i).Key==Key )
 				new(Values)TI(Pairs(i).Value);
 	}
-	TI& Add( TTypeInfo<TK>::ConstInitType InKey, TTypeInfo<TI>::ConstInitType InValue )
+	TI& Add( typename TTypeInfo<TK>::ConstInitType InKey, typename TTypeInfo<TI>::ConstInitType InValue )
 	{
 		return TMapBase<TK,TI>::Add( InKey, InValue );
 	}
-	TI& AddUnique( TTypeInfo<TK>::ConstInitType InKey, TTypeInfo<TI>::ConstInitType InValue )
+	TI& AddUnique( typename TTypeInfo<TK>::ConstInitType InKey, typename TTypeInfo<TI>::ConstInitType InValue )
 	{
 		for( INT i=Hash[(GetTypeHash(InKey) & (HashCount-1))]; i!=INDEX_NONE; i=Pairs(i).HashNext )
 			if( Pairs(i).Key==InKey && Pairs(i).Value==InValue )
 				return Pairs(i).Value;
 		return Add( InKey, InValue );
 	}
-	INT RemovePair( TTypeInfo<TK>::ConstInitType InKey, TTypeInfo<TI>::ConstInitType InValue )
+	INT RemovePair( typename TTypeInfo<TK>::ConstInitType InKey, typename TTypeInfo<TI>::ConstInitType InValue )
 	{
 		INT Count=0;
 		for( INT i=Pairs.Num()-1; i>=0; i-- )

@@ -24,8 +24,8 @@ class WDlgBrushBuilder : public WDialog
 	// Constructor.
 	WDlgBrushBuilder( UObject* InContext, WWindow* InOwnerWindow, UBrushBuilder* InBuilder )
 	:	WDialog		( TEXT("Brush Builder"), IDDIALOG_BRUSH_BUILDER, InOwnerWindow )
-	,	BuildButton	( this, IDPB_BUILD, FDelegate(this,(TDelegate)OnBuild) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	BuildButton	( this, IDPB_BUILD, FDelegate(this,(TDelegate)&WDlgBrushBuilder::OnBuild) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgBrushBuilder::EndDialogFalse) )
 	{
 		Builder = InBuilder;
 

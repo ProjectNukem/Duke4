@@ -384,7 +384,7 @@ void FDnExec::Printf(TCHAR* Fmt, ... )
 	static TCHAR buf[2048];
 	static FLOAT lastPrintTime = 0.0;
 
-	appGetVarArgs(buf, 2047, Fmt);
+	appGetVarArgs(buf, 2047, *(const TCHAR**)&Fmt);
 	FLOAT curTime = appSeconds();
 	INT crop = (curTime-lastPrintTime)*10.0;
 	printLogIndex -= crop;
@@ -451,7 +451,7 @@ void FDnExec::LoadConfigVariables()
 UBOOL FDnExec::Execf(FOutputDevice& Ar, TCHAR* Cmd, ... )
 {
 	static TCHAR buf[2048];
-	appGetVarArgs(buf, 2047, Cmd);
+	appGetVarArgs(buf, 2047, *(const TCHAR**)&Cmd);
 	return(Exec(buf, Ar));
 }
 UBOOL FDnExec::Exec(const TCHAR* Cmd, FOutputDevice& Ar)

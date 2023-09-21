@@ -22,8 +22,8 @@ class WDlgGeneric : public WDialog
 	// Constructor.
 	WDlgGeneric( UObject* InContext, WWindow* InOwnerWindow, UOptionsProxy* InProxy )
 	:	WDialog			( TEXT("Generic"), IDDIALOG_GENERIC, InOwnerWindow )
-	,	OKButton		( this, IDOK, FDelegate(this,(TDelegate)OnOK) )
-	,	CancelButton	( this, IDCANCEL, FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OKButton		( this, IDOK, FDelegate(this,(TDelegate)&WDlgGeneric::OnOK) )
+	,	CancelButton	( this, IDCANCEL, FDelegate(this,(TDelegate)&WDlgGeneric::EndDialogFalse) )
 	{
 		check(InProxy);
 		Proxy = InProxy;

@@ -47,8 +47,8 @@ class WDlgNewTexture : public WDialog
 	// Constructor.
 	WDlgNewTexture( UObject* InContext, WBrowser* InOwnerWindow )
 		:	WDialog			( TEXT("New Texture"), IDDIALOG_NEW_TEXTURE, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgNewTexture::OnOk) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgNewTexture::EndDialogFalse) )
 	,	PackageEdit		( this, IDEC_PACKAGE )
 	,	GroupEdit		( this, IDEC_GROUP )
 	,	NameEdit		( this, IDEC_NAME )
@@ -177,10 +177,10 @@ class WDlgImportTexture : public WDialog
 	// Constructor.
 	WDlgImportTexture( UObject* InContext, WBrowser* InOwnerWindow )
 	:	WDialog			( TEXT("Import Texture"), IDDIALOG_IMPORT_TEXTURE, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	OkAllButton		( this, IDPB_OKALL,		FDelegate(this,(TDelegate)OnOkAll) )
-	,	SkipButton		( this, IDPB_SKIP,		FDelegate(this,(TDelegate)OnSkip) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgImportTexture::OnOk) )
+	,	OkAllButton		( this, IDPB_OKALL,		FDelegate(this,(TDelegate)&WDlgImportTexture::OnOkAll) )
+	,	SkipButton		( this, IDPB_SKIP,		FDelegate(this,(TDelegate)&WDlgImportTexture::OnSkip) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgImportTexture::EndDialogFalse) )
 	,	PackageEdit		( this, IDEC_PACKAGE )
 	,	GroupEdit		( this, IDEC_GROUP )
 	,	NameEdit		( this, IDEC_NAME )
@@ -390,17 +390,17 @@ class WBrowserTexture : public WBrowser
 		//
 		pComboPackage = new WComboBox( this, IDCB_PACKAGE );
 		pComboPackage->OpenWindow( 1, 1 );
-		pComboPackage->SelectionChangeDelegate = FDelegate(this, (TDelegate)OnComboPackageSelChange);
+		pComboPackage->SelectionChangeDelegate = FDelegate(this, (TDelegate)&WBrowserTexture::OnComboPackageSelChange);
 
 		// GROUP
 		//
 		pComboGroup = new WComboBox( this, IDCB_GROUP );
 		pComboGroup->OpenWindow( 1, 1 );
-		pComboGroup->SelectionChangeDelegate = FDelegate(this, (TDelegate)OnComboGroupSelChange);
+		pComboGroup->SelectionChangeDelegate = FDelegate(this, (TDelegate)&WBrowserTexture::OnComboGroupSelChange);
 
 		// CHECK BOXES
 		//
-		pCheckGroupAll = new WCheckBox( this, IDCK_GRP_ALL, FDelegate(this, (TDelegate)OnGroupAllClick) );
+		pCheckGroupAll = new WCheckBox( this, IDCK_GRP_ALL, FDelegate(this, (TDelegate)&WBrowserTexture::OnGroupAllClick) );
 		pCheckGroupAll->OpenWindow( 1, 0, 0, 1, 1, TEXT("All"), 1, 0, BS_PUSHLIKE );
 
 		// LABELS
@@ -414,7 +414,7 @@ class WBrowserTexture : public WBrowser
 		pEditFilter = new WEdit( this, IDEC_FILTER );
 		pEditFilter->OpenWindow( 1, 0, 0 );
 		pEditFilter->SetText( TEXT("") );
-		pEditFilter->ChangeDelegate = FDelegate(this, (TDelegate)OnEditFilterChange);
+		pEditFilter->ChangeDelegate = FDelegate(this, (TDelegate)&WBrowserTexture::OnEditFilterChange);
 
 		// SCROLLBARS
 		//

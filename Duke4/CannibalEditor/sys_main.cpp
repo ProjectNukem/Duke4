@@ -353,7 +353,7 @@ char *SYS_GetFileName(char *filename)
 
 char *SYS_GetFileExtention(CC8 *filename)
 {
-	char *ptr = strrchr(filename, '.');
+	char *ptr = (char*)strrchr(filename, '.');
 	if (ptr) ptr++;
 	else ptr = "";
 	return(ptr);

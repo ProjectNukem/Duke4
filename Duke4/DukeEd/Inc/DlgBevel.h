@@ -23,8 +23,8 @@ class WDlgBevel : public WDialog
 	// Constructor.
 	WDlgBevel( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog				( TEXT("Bevel"), IDDIALOG_SurfBevel, InOwnerWindow )
-	,	CancelButton		( this, IDCANCEL, FDelegate(this,(TDelegate)EndDialogFalse) )
-	,	OKButton			( this, IDOK, FDelegate(this,(TDelegate)OnOK) )
+	,	CancelButton		( this, IDCANCEL, FDelegate(this,(TDelegate)&WDlgBevel::EndDialogFalse) )
+	,	OKButton			( this, IDOK, FDelegate(this,(TDelegate)&WDlgBevel::OnOK) )
 	,	DepthEdit			( this, IDEC_DEPTH )
 	,	BevelEdit			( this, IDEC_BEVEL )
 	{

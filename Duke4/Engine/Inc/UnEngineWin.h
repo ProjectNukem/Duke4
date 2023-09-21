@@ -196,8 +196,8 @@ class WConfigPageRenderer : public WWizardPage
 	: WWizardPage( TEXT("ConfigPageRenderer"), IDDIALOG_ConfigPageRenderer, InOwner )
 	, Owner(InOwner)
 	, RenderList(this,IDC_RenderList)
-	, ShowCompatible(this,IDC_Compatible,FDelegate(this,(TDelegate)RefreshList))
-	, ShowAll(this,IDC_All,FDelegate(this,(TDelegate)RefreshList))
+	, ShowCompatible(this,IDC_Compatible,FDelegate(this,(TDelegate)&WConfigPageRenderer::RefreshList))
+	, ShowAll(this,IDC_All,FDelegate(this,(TDelegate)&WConfigPageRenderer::RefreshList))
 	, RenderNote(this,IDC_RenderNote)
 	, First(0)
 	{}
@@ -262,8 +262,8 @@ class WConfigPageRenderer : public WWizardPage
 	{
 		WWizardPage::OnInitDialog();
 		SendMessageX(ShowCompatible,BM_SETCHECK,BST_CHECKED,0);
-		RenderList.SelectionChangeDelegate = FDelegate(this,(TDelegate)CurrentChange);
-		RenderList.DoubleClickDelegate = FDelegate(Owner,(TDelegate)WWizardDialog::OnNext);
+		RenderList.SelectionChangeDelegate = FDelegate(this,(TDelegate)&WConfigPageRenderer::CurrentChange);
+		RenderList.DoubleClickDelegate = FDelegate(Owner,(TDelegate)&WWizardDialog::OnNext);
 		RenderList.AddString( LocalizeGeneral(TEXT("Detecting"),TEXT("Startup")) );
 	}
 	FString CurrentDriver()
@@ -299,10 +299,10 @@ class WConfigPageSafeMode : public WWizardPage
 	WCoolButton RunButton, VideoButton, SafeModeButton, WebButton;
 	WConfigPageSafeMode( WConfigWizard* InOwner )
 	: WWizardPage    ( TEXT("ConfigPageSafeMode"), IDDIALOG_ConfigPageSafeMode, InOwner )
-	, RunButton      ( this, IDC_Run,      FDelegate(this,(TDelegate)OnRun) )
-	, VideoButton    ( this, IDC_Video,    FDelegate(this,(TDelegate)OnVideo) )
-	, SafeModeButton ( this, IDC_SafeMode, FDelegate(this,(TDelegate)OnSafeMode) )
-	, WebButton      ( this, IDC_Web,      FDelegate(this,(TDelegate)OnWeb) )
+	, RunButton      ( this, IDC_Run,      FDelegate(this,(TDelegate)&WConfigPageSafeMode::OnRun) )
+	, VideoButton    ( this, IDC_Video,    FDelegate(this,(TDelegate)&WConfigPageSafeMode::OnVideo) )
+	, SafeModeButton ( this, IDC_SafeMode, FDelegate(this,(TDelegate)&WConfigPageSafeMode::OnSafeMode) )
+	, WebButton      ( this, IDC_Web,      FDelegate(this,(TDelegate)&WConfigPageSafeMode::OnWeb) )
 	, Owner          (InOwner)
 	{}
 	void OnRun()

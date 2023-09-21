@@ -33,8 +33,8 @@ class WDlgMapErrors : public WDialog
 	// Constructor.
 	WDlgMapErrors( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog				( TEXT("Map Errors/Warnings"), IDDIALOG_MAP_ERRORS, InOwnerWindow )
-	,	RefreshButton		( this, IDPB_REFRESH, FDelegate(this,(TDelegate)OnRefresh) )
-	,	CloseButton			( this, IDCLOSE, FDelegate(this,(TDelegate)OnClose) )
+	,	RefreshButton		( this, IDPB_REFRESH, FDelegate(this,(TDelegate)&WDlgMapErrors::OnRefresh) )
+	,	CloseButton			( this, IDCLOSE, FDelegate(this,(TDelegate)&WDlgMapErrors::OnClose) )
 	,	ErrorList			( this, IDLC_ERRORS )
 	{
 	}
@@ -60,7 +60,7 @@ class WDlgMapErrors : public WDialog
 		check(himl);
 		ListView_SetImageList( ErrorList.hWnd, himl, LVSIL_SMALL );
 
-		ErrorList.DblClkDelegate = FDelegate(this, (TDelegate)OnErrorListDblClk);
+		ErrorList.DblClkDelegate = FDelegate(this, (TDelegate)&WDlgMapErrors::OnErrorListDblClk);
 	}
 	void OnDestroy()
 	{

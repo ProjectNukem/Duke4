@@ -259,6 +259,11 @@ UBOOL UPrimitive::LineCheck
 
 }
 
+QSORT_RETURN CDECL CompareHits( const FCheckResult* A, const FCheckResult* B )
+{
+	return A->Time<B->Time ? -1 : A->Time>B->Time ? 1 : 0;
+}
+
 /*----------------------------------------------------------------------------
 	The End.
 ----------------------------------------------------------------------------*/

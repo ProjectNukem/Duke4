@@ -178,7 +178,7 @@ class WBottomBar : public WWindow
 		LogCommandCombo = new WComboBox( this, IDCB_LOG_COMMAND );
 		LogCommandCombo->OpenWindow( 1, 0, CBS_DROPDOWN );
 		LogCommandCombo->MoveWindow( 0, 0, 32, 32, 1);
-		LogCommandCombo->SelectionChangeDelegate = FDelegate(this,(TDelegate)OnLogCommandSelChange);
+		LogCommandCombo->SelectionChangeDelegate = FDelegate(this,(TDelegate)&WBottomBar::OnLogCommandSelChange);
 
 		// We subclass the edit control inside of the combobox so we can catch events that
 		// are normally invisible to us ... like the user pressing ENTER.
@@ -222,7 +222,7 @@ class WBottomBar : public WWindow
 		DragGridSizeCombo->AddString( TEXT("64") );
 		DragGridSizeCombo->AddString( TEXT("128") );
 		DragGridSizeCombo->AddString( TEXT("256") );
-		DragGridSizeCombo->SelectionChangeDelegate = FDelegate(this,(TDelegate)OnDragGridSizeSelChange);
+		DragGridSizeCombo->SelectionChangeDelegate = FDelegate(this,(TDelegate)&WBottomBar::OnDragGridSizeSelChange);
 
 		new(PictureButtons)WPictureButton( this );
 		RotGridCheck = &(PictureButtons(PictureButtons.Num() - 1));	check(SnapVertexCheck);

@@ -171,7 +171,7 @@ class WButtonGroup : public WWindow
 		ToolTipCtrl = new WToolTip(this);
 		ToolTipCtrl->OpenWindow();
 
-		pExpandButton = new WButton( this, IDPB_EXPAND, FDelegate(this, (TDelegate)OnExpandButton) );
+		pExpandButton = new WButton( this, IDPB_EXPAND, FDelegate(this, (TDelegate)&WButtonGroup::OnExpandButton) );
 		pExpandButton->OpenWindow( 1, 0, 0, 19, 19, TEXT(""), 1, BS_OWNERDRAW );
 		UpdateButton();
 

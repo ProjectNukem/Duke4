@@ -21,7 +21,7 @@ class WDlgSearchActors : public WDialog
 	// Constructor.
 	WDlgSearchActors( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog			( TEXT("Search for Actors"), IDDIALOG_SEARCH, InOwnerWindow )
-	,	CloseButton		( this, IDPB_CLOSE,		FDelegate(this,(TDelegate)OnClose) )
+	,	CloseButton		( this, IDPB_CLOSE,		FDelegate(this,(TDelegate)&WDlgSearchActors::OnClose) )
 	,	NameEdit		( this, IDEC_NAME )
 	,	EventEdit		( this, IDEC_EVENT )
 	,	TagEdit			( this, IDEC_TAG )
@@ -33,10 +33,10 @@ class WDlgSearchActors : public WDialog
 	void OnInitDialog()
 	{
 		WDialog::OnInitDialog();
-		ActorList.DoubleClickDelegate = FDelegate(this, (TDelegate)OnActorListDblClick);
-		NameEdit.ChangeDelegate = FDelegate(this, (TDelegate)OnNameEditChange);
-		EventEdit.ChangeDelegate = FDelegate(this, (TDelegate)OnEventEditChange);
-		TagEdit.ChangeDelegate = FDelegate(this, (TDelegate)OnTagEditChange);
+		ActorList.DoubleClickDelegate = FDelegate(this, (TDelegate)&WDlgSearchActors::OnActorListDblClick);
+		NameEdit.ChangeDelegate = FDelegate(this, (TDelegate)&WDlgSearchActors::OnNameEditChange);
+		EventEdit.ChangeDelegate = FDelegate(this, (TDelegate)&WDlgSearchActors::OnEventEditChange);
+		TagEdit.ChangeDelegate = FDelegate(this, (TDelegate)&WDlgSearchActors::OnTagEditChange);
 		RefreshActorList();
 	}
 	virtual void OnShowWindow( UBOOL bShow )

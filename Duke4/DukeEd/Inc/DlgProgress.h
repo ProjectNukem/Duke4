@@ -21,7 +21,7 @@ class WDlgProgress : public WDialog
 	// Constructor.
 	WDlgProgress( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog				( TEXT("Progress"), IDDIALOG_PROGRESS, InOwnerWindow )
-	,	CancelButton		( this, IDPB_CANCEL, FDelegate(this,(TDelegate)OnCancel) )
+	,	CancelButton		( this, IDPB_CANCEL, FDelegate(this,(TDelegate)&WDlgProgress::OnCancel) )
 	{
 	}
 

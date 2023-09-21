@@ -36,10 +36,10 @@ class WDlgImportMusic : public WDialog
 	// Constructor.
 	WDlgImportMusic( UObject* InContext, WBrowser* InOwnerWindow )
 	:	WDialog			( TEXT("Import Music"), IDDIALOG_IMPORT_MUSIC, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	OkAllButton		( this, IDPB_OKALL,		FDelegate(this,(TDelegate)OnOkAll) )
-	,	SkipButton		( this, IDPB_SKIP,		FDelegate(this,(TDelegate)OnSkip) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgImportMusic::OnOk) )
+	,	OkAllButton		( this, IDPB_OKALL,		FDelegate(this,(TDelegate)&WDlgImportMusic::OnOkAll) )
+	,	SkipButton		( this, IDPB_SKIP,		FDelegate(this,(TDelegate)&WDlgImportMusic::OnSkip) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgImportMusic::EndDialogFalse) )
 	,	NameEdit		( this, IDEC_NAME )
 	,	FilenameStatic	( this, IDSC_FILENAME )
 	{
@@ -205,7 +205,7 @@ class WBrowserMusic : public WBrowser
 		//
 		pListMusic = new WListBox( this, IDLB_MUSIC );
 		pListMusic->OpenWindow( 1, 0, 0, 0, 1 );
-		pListMusic->DoubleClickDelegate = FDelegate(this, (TDelegate)OnListMusicDblClick);
+		pListMusic->DoubleClickDelegate = FDelegate(this, (TDelegate)&WBrowserMusic::OnListMusicDblClick);
 
 		hWndToolBar = CreateToolbarEx( 
 			hWnd, WS_CHILD | WS_BORDER | WS_VISIBLE | CCS_ADJUSTABLE,

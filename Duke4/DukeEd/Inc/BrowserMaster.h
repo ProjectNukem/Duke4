@@ -111,7 +111,7 @@ class WBrowserMaster : public WBrowser
 
 		BrowserTabs = new WTabControl( this, IDCB_BROWSER );
 		BrowserTabs->OpenWindow( 1 );
-		BrowserTabs->SelectionChangeDelegate = FDelegate(this, (TDelegate)OnBrowserTabSelChange);
+		BrowserTabs->SelectionChangeDelegate = FDelegate(this, (TDelegate)&WBrowserMaster::OnBrowserTabSelChange);
 
 		PositionChildControls();
 	}

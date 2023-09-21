@@ -26,7 +26,7 @@ class WDlgTexProp : public WDialog
 	// Constructor.
 	WDlgTexProp( UObject* InContext, WWindow* InOwnerWindow, UTexture* InTexture )
 	:	WDialog		( TEXT("Texture Properties"), IDDIALOG_TEX_PROP, InOwnerWindow )
-	,	ClearButton	( this, IDPB_CLEAR, FDelegate(this,(TDelegate)OnClear) )
+	,	ClearButton	( this, IDPB_CLEAR, FDelegate(this,(TDelegate)&WDlgTexProp::OnClear) )
 	{
 		ViewportName = FString::Printf( TEXT("TextureProp%d"), ++GLastViewportNum );
 		pTexture = InTexture;

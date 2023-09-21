@@ -1500,15 +1500,15 @@ class WNewObject : public WDialog
 	// Constructor.
 	WNewObject( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog		( TEXT("NewObject"), IDDIALOG_NewObject, InOwnerWindow )
-	,	OkButton    ( this, IDOK,     FDelegate(this,(TDelegate)OnOk) )
-	,	CancelButton( this, IDCANCEL, FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton    ( this, IDOK,     FDelegate(this,(TDelegate)&WNewObject::OnOk) )
+	,	CancelButton( this, IDCANCEL, FDelegate(this,(TDelegate)&WNewObject::EndDialogFalse) )
 	,	TypeList	( this, IDC_TypeList )
 	,	Props		( NAME_None, CPF_Edit, TEXT(""), this, 0 )
 	,	Context     ( InContext )
 	,	Result		( NULL )
 	{
 		Props.ShowTreeLines = 0;
-		TypeList.DoubleClickDelegate=FDelegate(this,(TDelegate)OnOk);
+		TypeList.DoubleClickDelegate=FDelegate(this,(TDelegate)&WNewObject::OnOk);
 	}
 
 	// WDialog interface.
@@ -1526,7 +1526,7 @@ class WNewObject : public WDialog
 		}
 		Props.OpenChildWindow( IDC_PropHolder );
 		TypeList.SetCurrent( 0, 1 );
-		TypeList.SelectionChangeDelegate = FDelegate(this,(TDelegate)OnSelChange);
+		TypeList.SelectionChangeDelegate = FDelegate(this,(TDelegate)&WNewObject::OnSelChange);
 		OnSelChange();
 	}
 	void OnDestroy()

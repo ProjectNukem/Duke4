@@ -25,9 +25,9 @@ class WDlgBuildOptions : public WDialog
 	// Constructor.
 	WDlgBuildOptions( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog				( TEXT("Build Options"), IDDIALOG_BUILD_OPTIONS, InOwnerWindow )
-	,	BuildAllButton	( this, IDPB_BUILD_SELECTED, FDelegate(this,(TDelegate)OnBuildAll) )
-	,	RefreshButton		( this, IDPB_REFRESH, FDelegate(this,(TDelegate)OnRefresh) )
-	,	HideButton			( this, IDPB_HIDE, FDelegate(this,(TDelegate)OnHide) )
+	,	BuildAllButton	( this, IDPB_BUILD_SELECTED, FDelegate(this,(TDelegate)&WDlgBuildOptions::OnBuildAll) )
+	,	RefreshButton		( this, IDPB_REFRESH, FDelegate(this,(TDelegate)&WDlgBuildOptions::OnRefresh) )
+	,	HideButton			( this, IDPB_HIDE, FDelegate(this,(TDelegate)&WDlgBuildOptions::OnHide) )
 	,	GeomBrushesLabel	( this, IDSC_BRUSHES )
 	,	GeomZonesLabel		( this, IDSC_ZONES )
 	,	BSPPolysLabel		( this, IDSC_POLYS )

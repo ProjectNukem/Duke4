@@ -22,9 +22,9 @@
 #include ".\Mrg\Include\Mrg.h"
 
 #if KRN_DEBUG
-#pragma comment(lib, ".\\Mrg\\Lib\\Mrgd.lib")
+#pragma comment(lib, "Mrgd.lib")
 #else
-#pragma comment(lib, ".\\Mrg\\Lib\\Mrg.lib")
+#pragma comment(lib, "Mrg.lib")
 #endif
 
 //============================================================================

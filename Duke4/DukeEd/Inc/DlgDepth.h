@@ -22,8 +22,8 @@ class WDlgDepth : public WDialog
 	// Constructor.
 	WDlgDepth( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog				( TEXT("Depth"), IDDIALOG_Depth, InOwnerWindow )
-	,	CancelButton		( this, IDCANCEL, FDelegate(this,(TDelegate)EndDialogFalse) )
-	,	OKButton			( this, IDOK, FDelegate(this,(TDelegate)OnOK) )
+	,	CancelButton		( this, IDCANCEL, FDelegate(this,(TDelegate)&WDlgDepth::EndDialogFalse) )
+	,	OKButton			( this, IDOK, FDelegate(this,(TDelegate)&WDlgDepth::OnOK) )
 	,	DepthEdit			( this, IDEC_DEPTH )
 	{
 	}

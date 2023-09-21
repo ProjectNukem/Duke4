@@ -23,8 +23,8 @@ class WDlgBrushImport : public WDialog
 	// Constructor.
 	WDlgBrushImport( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog			( TEXT("Brush Import"), IDDIALOG_IMPORT_BRUSH, InOwnerWindow )
-	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOk) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OkButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgBrushImport::OnOk) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgBrushImport::EndDialogFalse) )
 	,	MergeCheck		( this, IDCK_MERGE_FACES )
 	,	SolidCheck		( this, IDRB_SOLID )
 	,	NonSolidCheck	( this, IDRB_NONSOLID )

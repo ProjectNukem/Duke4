@@ -63,8 +63,7 @@ struct FCheckResult : public FIteratorActorList
 	{}
 	FCheckResult*& GetNext()
 		{ return *(FCheckResult**)&Next; }
-	friend QSORT_RETURN CDECL CompareHits( const FCheckResult* A, const FCheckResult* B )
-		{ return A->Time<B->Time ? -1 : A->Time>B->Time ? 1 : 0; }
+	friend QSORT_RETURN CDECL CompareHits( const FCheckResult* A, const FCheckResult* B );
 };
 
 /*-----------------------------------------------------------------------------

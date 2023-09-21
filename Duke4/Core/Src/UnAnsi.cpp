@@ -295,18 +295,18 @@ CORE_API INT appStrlen( const TCHAR* String )
 CORE_API TCHAR* appStrstr( const TCHAR* String, const TCHAR* Find )
 {
 #if UNICODE
-	return wcsstr( String, Find );
+	return (TCHAR*)wcsstr( String, Find );
 #else
-	return strstr( String, Find );
+	return (TCHAR*)strstr( String, Find );
 #endif
 }
 
 CORE_API TCHAR* appStrchr( const TCHAR* String, int c )
 {
 #if UNICODE
-	return wcschr( String, c );
+	return (TCHAR*)wcschr( String, c );
 #else
-	return strchr( String, c );
+	return (TCHAR*)strchr( String, c );
 #endif
 }
 

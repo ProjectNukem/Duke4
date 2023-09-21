@@ -23,8 +23,8 @@ class WDlgViewportConfig : public WDialog
 	// Constructor.
 	WDlgViewportConfig( UObject* InContext, WWindow* InOwnerWindow )
 	:	WDialog			( TEXT("Viewport Config"), IDDIALOG_VIEWPORT_CONFIG, InOwnerWindow )
-	,	OKButton		( this, IDOK,			FDelegate(this,(TDelegate)OnOK) )
-	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)EndDialogFalse) )
+	,	OKButton		( this, IDOK,			FDelegate(this,(TDelegate)&WDlgViewportConfig::OnOK) )
+	,	CancelButton	( this, IDCANCEL,		FDelegate(this,(TDelegate)&WDlgViewportConfig::EndDialogFalse) )
 	,	Cfg0Check		( this, IDRB_VCONFIG0 )
 	,	Cfg1Check		( this, IDRB_VCONFIG1 )
 	,	Cfg2Check		( this, IDRB_VCONFIG2 )
