@@ -1,4 +1,24 @@
 cmake_minimum_required(VERSION 3.13)
+
+# Environment
+cmake_path(CONVERT "$ENV{MASM_BIN}" TO_CMAKE_PATH_LIST MASM_BIN)
+set(MASM_DIR ${MASM_BIN} CACHE PATH "Path to directory containing ML.EXE")
+
+# Set MASM and NASM locations
+set(CMAKE_ASM_MASM_COMPILER "${MASM_DIR}/ML.EXE")
+
+# The Visual Studio generator seems to ignore CMAKE_ASM_NASM_COMPILE_OBJECT,
+# so for that scenario we'll just allow CMake to fall back to whatever NASM
+# is installed on the machine.
+if ("${CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
+    set(CMAKE_ASM_NASM_COMPILER "${CMAKE_SOURCE_DIR}/BIN/NASM/NASM.EXE")
+
+    # We don't want to forward include paths or defines to NASM, because it breaks the compile.
+    # Notably, the build of NASM included with the leaked source can't handle -I include paths.
+    set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -DWIN32 -o <OBJECT> <SOURCE>")
+endif()
+
+# Init project
 project(Duke4 C CXX ASM_MASM ASM_NASM)
 
 # Output binaries to the System directory
@@ -44,24 +64,6 @@ if (MSVC_VERSION GREATER_EQUAL 1400)
 
     # Disable safe exception handlers
     add_link_options("/SAFESEH:NO")
-endif()
-
-# Environment
-cmake_path(CONVERT "$ENV{MASM_BIN}" TO_CMAKE_PATH_LIST MASM_BIN)
-set(MASM_DIR ${MASM_BIN} CACHE PATH "Path to directory containing ML.EXE")
-
-# Set MASM and NASM locations
-set(CMAKE_ASM_MASM_COMPILER "${MASM_DIR}/ML.EXE")
-
-# The Visual Studio generator seems to ignore CMAKE_ASM_NASM_COMPILE_OBJECT,
-# so for that scenario we'll just allow CMake to fall back to whatever NASM
-# is installed on the machine.
-if ("${CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
-    set(CMAKE_ASM_NASM_COMPILER "${CMAKE_SOURCE_DIR}/BIN/NASM/NASM.EXE")
-
-    # We don't want to forward include paths or defines to NASM, because it breaks the compile.
-    # Notably, the build of NASM included with the leaked source can't handle -I include paths.
-    set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -DWIN32 -o <OBJECT> <SOURCE>")
 endif()
 
 # DirectX
