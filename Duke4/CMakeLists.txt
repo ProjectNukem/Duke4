@@ -15,6 +15,7 @@ if ("${CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
 
     # We don't want to forward include paths or defines to NASM, because it breaks the compile.
     # Notably, the build of NASM included with the leaked source can't handle -I include paths.
+    set(CMAKE_ASM_NASM_OBJECT_FORMAT "win32")
     set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -DWIN32 -o <OBJECT> <SOURCE>")
 endif()
 
