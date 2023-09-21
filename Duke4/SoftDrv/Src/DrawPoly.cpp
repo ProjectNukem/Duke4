@@ -58,7 +58,7 @@ static struct FTexSetup
 
 
 static FMMX* MMXColors;
-static SavedEBP,SavedESP;
+static int SavedEBP,SavedESP;
 
 static FMMX TriDeltaLight;
 static FMMX TriDeltaFog;
@@ -4533,9 +4533,9 @@ void USoftwareRenderDevice::DrawGouraudPolygon(FSceneNode* Frame, FTextureInfo& 
 	DrawTrianglePtr TriangleFunc;
 
 	if (GIsMMX)
-		TriangleFunc = MMXFlashTriangle;
+		TriangleFunc = &USoftwareRenderDevice::MMXFlashTriangle;
 		else
-		TriangleFunc = PentiumFlashTriangle;
+		TriangleFunc = &USoftwareRenderDevice::PentiumFlashTriangle;
 
 	Point0 = Pts[0];
 	Point1 = Pts[1]; 
