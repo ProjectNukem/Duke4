@@ -157,7 +157,7 @@ class DLL_EXPORT USoftwareRenderDevice : public URenderDevice
 	void __fastcall Unlock( UBOOL Blit );
 	//void DrawComplexSurface( FSceneNode* Frame, FSurfaceInfo& Surface, FSurfaceFacet& Facet,TArray<FTransSample> lightingInfo );
 	void __fastcall DrawComplexSurface( FSceneNode* Frame, FSurfaceInfo& Surface, FSurfaceFacet& Facet);
-	void __fastcall DrawGouraudPolygon( FSceneNode* Frame, FTextureInfo& Texture, FTransTexture** Pts, INT NumPts, DWORD PolyFlags, FSpanBuffer* SpanBuffer );
+	void __fastcall DrawGouraudPolygon( FSceneNode* Frame, FTextureInfo& Texture, FTransTexture** Pts, INT NumPts, DWORD PolyFlags, FSpanBuffer* SpanBuffer, DWORD PolyFlagsEx=0 );
 	void __fastcall DrawTile( FSceneNode* Frame, 
 					FTextureInfo& Info, 
 					FLOAT X, FLOAT Y, 

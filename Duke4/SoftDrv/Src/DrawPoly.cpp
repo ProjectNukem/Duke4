@@ -4363,7 +4363,7 @@ void USoftwareRenderDevice::PentiumFlashTriangle
 	Polygon drawing routine.
 -----------------------------------------------------------------------------*/
 
-void USoftwareRenderDevice::DrawGouraudPolygon(FSceneNode* Frame, FTextureInfo& Texture, FTransTexture** Pts, INT NumPts, DWORD PolyFlags, FSpanBuffer* SpanBuffer )
+void USoftwareRenderDevice::DrawGouraudPolygon(FSceneNode* Frame, FTextureInfo& Texture, FTransTexture** Pts, INT NumPts, DWORD PolyFlags, FSpanBuffer* SpanBuffer, DWORD PolyFlagsEx )
 
 {
 //	guard(USoftwareRenderDevice::DrawGouraudPolygon);
