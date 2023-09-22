@@ -569,7 +569,7 @@ Rehack://oldver
 		}
 		if( !Import.XObject && !SafeReplace )
 		{
-			//LoadFlags|=LOAD_Forgiving;
+			LoadFlags|=LOAD_Forgiving;
 			if( LoadFlags & LOAD_Forgiving )
 			{
 				if( Cast<UPackage>(LinkerRoot) )
