@@ -397,6 +397,8 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 				GlideFlags |= GF_NoScale | GF_RGBA4;
 			if( Info.Format!=TEXF_P8 )
 				GlideFlags |= GF_NoPalette;
+			if( Info.Format==TEXF_RGBA8 )
+				GlideFlags |= GF_RGBA4;
 			QWORD TestID = Info.CacheID + (((QWORD)GlideFlags) << 59);
 			if( TestID!=TextureCacheID )
 			{
@@ -1055,6 +1057,44 @@ DWORD UGlideRenderDevice::FGlideTMU::DownloadTexture
 			Info.VClamp-1
 		);
 		unclock(Stats.Download16Time);
+	}
+	else if( Info.Format==TEXF_RGBA8 )
+	{
+		// Source format is 32-bit RGBA
+		FGlideColor* Space = New<FGlideColor>(GMem, MaxSize);
+
+		// Download the texture's mips.
+		for( INT iMip=iFirstMip; iMip<=iLastMip; iMip++ )
+		{
+			FMipmapBase* Mip = Info.Mips[iMip];
+			FColor* From = (FColor*)Info.Mips[iMip]->DataPtr;
+			FGlideColor* To = Space;
+
+			for( INT j=0; j<Mip->VSize; j++ )
+			{
+				for( INT k=0; k<Mip->USize; k++ )
+				{
+					To->Color4444.R = From->B >> 4;
+					To->Color4444.G = From->G >> 4;
+					To->Color4444.B = From->R >> 4;
+					To->Color4444.A = From->A >> 4;
+					From++;
+					To++;
+				}
+			}
+
+			grTexDownloadMipMapLevel
+			(
+				tmu,
+				Address,
+				texinfo->largeLod + iMip - iFirstMip,
+				texinfo->largeLod,
+				texinfo->aspectRatio,
+				texinfo->format,
+				GR_MIPMAPLEVELMASK_BOTH,
+				Space
+			);
+		}
 	}
 	else if( Info.Format==TEXF_P8 )
 	{
