@@ -44,6 +44,7 @@ class ENGINE_API URenderDevice : public USubsystem
 	FString			Description;
 	DWORD			DescFlags;
 	BITFIELD		SpanBased;
+	BITFIELD		FullscreenOnly;
 	BITFIELD		SupportsFogMaps;
 	BITFIELD		SupportsDistanceFog;
 	BITFIELD		VolumetricLighting;
