@@ -255,14 +255,15 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 	void __fastcall Flush( UBOOL AllowPrecache );
 	//void Lock( FPlane FlashScale, FPlane FlashFog, FPlane ScreenClear, DWORD RenderLockFlags, BYTE* HitData, INT* HitSize );
 	// NJS: Fogo tasto:
-	void __fastcall Lock( FColor FogColor, float FogDensity, BYTE FogDistance, FPlane FlashScale, FPlane FlashFog, FPlane ScreenClear, DWORD RenderLockFlags, BYTE* HitData, INT* HitSize );
+	void __fastcall Lock( FColor FogColor, float FogDensity, INT FogDistance, FPlane FlashScale, FPlane FlashFog, FPlane ScreenClear, DWORD RenderLockFlags, BYTE* HitData, INT* HitSize );
 
 	void __fastcall Unlock( UBOOL Blit );
 	//void DrawComplexSurface( FSceneNode* Frame, FSurfaceInfo& Surface, FSurfaceFacet& Facet, TArray<FTransSample> lightingInfo);
 	void __fastcall DrawComplexSurface( FSceneNode* Frame, FSurfaceInfo& Surface, FSurfaceFacet& Facet);
 
-	void __fastcall DrawGouraudPolygon( FSceneNode* Frame, FTextureInfo& Info, FTransTexture** Pts, int NumPts, DWORD PolyFlags, FSpanBuffer* Span );
-	void __fastcall DrawTile(	FSceneNode* Frame, 
+	void __fastcall DrawGouraudPolygon( FSceneNode* Frame, FTextureInfo& Info, FTransTexture** Pts, int NumPts, DWORD PolyFlags, FSpanBuffer* Span, DWORD PolyFlagsEx );
+	void __fastcall DrawTile(
+					FSceneNode* Frame, 
 					FTextureInfo& Info, 
 					FLOAT X, FLOAT Y, 
 					FLOAT XL, FLOAT YL, 
@@ -272,13 +273,11 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 					FLOAT Z, 
 					FPlane Color, FPlane Fog, 
 					DWORD PolyFlags, 
-					UBOOL bilinear, 
+					DWORD PolyFlagsEx, 
 					FLOAT alpha,
 					FLOAT rot,
 					FLOAT rotationOffsetX,
-					FLOAT rotationOffsetY,
-					UBOOL MirrorHoriz,
-					UBOOL MirrorVert
+					FLOAT rotationOffsetY
 	);
 	UBOOL Exec( const TCHAR* Cmd, FOutputDevice& Ar );
 	//void __fastcall dnDraw3DLine( FSceneNode* Frame, UTexture *Texture, DWORD PolyFlags, FVector Start, FVector End, FLOAT StartWidth, FLOAT EndWidth, FColor StartColor, FColor EndColor );
@@ -1226,7 +1225,7 @@ void UGlideRenderDevice::FGlideTMU::DownloadPalette
 // Lock the Glide device.
 //
 //void UGlideRenderDevice::Lock( FPlane InFlashScale, FPlane InFlashFog, FPlane ScreenClear, DWORD InLockFlags, BYTE* HitData, INT* HitSize )
-void UGlideRenderDevice::Lock( FColor InFogColor, float InFogDensity, BYTE InFogDistance, FPlane InFlashScale, FPlane InFlashFog, FPlane ScreenClear, DWORD InLockFlags, BYTE* HitData, INT* HitSize )
+void UGlideRenderDevice::Lock( FColor InFogColor, float InFogDensity, INT InFogDistance, FPlane InFlashScale, FPlane InFlashFog, FPlane ScreenClear, DWORD InLockFlags, BYTE* HitData, INT* HitSize )
 {
 	check(!Locked++);
 
@@ -1774,7 +1773,8 @@ void UGlideRenderDevice::DrawGouraudPolygon
 	FTransTexture**	Pts,
 	INT				NumPts,
 	DWORD			PolyFlags,
-	FSpanBuffer*	Span
+	FSpanBuffer*	Span,
+	DWORD			PolyFlagsEx
 )
 {
 	clock(Stats.PolyCTime);
@@ -1854,26 +1854,28 @@ __forceinline void RotateAboutOrigin2D(float originX, float originY, float &x, f
 	x=xTick+originX; y=yTick+originY;
 }
 
-void UGlideRenderDevice::DrawTile(	FSceneNode* Frame, 
-									FTextureInfo& Texture, 
-									FLOAT X, FLOAT Y, 
-									FLOAT XL, FLOAT YL, 
-									FLOAT U, FLOAT V, 
-									FLOAT UL, FLOAT VL, 
-									class FSpanBuffer* Span, 
-									FLOAT Z, 
-									FPlane Color, FPlane Fog, 
-									DWORD PolyFlags, 
-									UBOOL bilinear, 
-									FLOAT alpha,
-									FLOAT rot,
-									FLOAT rotationOffsetX,
-									FLOAT rotationOffsetY,
-									UBOOL MirrorHoriz,
-									UBOOL MirrorVert)
+void UGlideRenderDevice::DrawTile(FSceneNode* Frame, 
+						FTextureInfo& Texture, 
+						FLOAT X, FLOAT Y, 
+						FLOAT XL, FLOAT YL, 
+						FLOAT U, FLOAT V, 
+						FLOAT UL, FLOAT VL, 
+						class FSpanBuffer* Span, 
+						FLOAT Z, 
+						FPlane Color, FPlane Fog, 
+						DWORD PolyFlags, 
+						DWORD PolyFlagsEx, 
+						FLOAT alpha,
+						FLOAT rot,
+						FLOAT rotationOffsetX,
+						FLOAT rotationOffsetY)
 {
 	Stats.Tris++;
 	UBOOL UsingAlpha=false;
+	
+	UBOOL bilinear = TRUE;
+	UBOOL MirrorHoriz = ( PolyFlagsEx & PFX_MirrorHorizontal ) ? TRUE : FALSE,
+		  MirrorVert  = ( PolyFlagsEx & PFX_MirrorVertical )   ? TRUE : FALSE;
 
 	// Optimize flags.
 	FColor Saved = Texture.Palette[0];
@@ -2703,7 +2705,7 @@ void UGlideRenderDevice::PopHit( INT Count, UBOOL bForce )
 	Pixel reading.
 -----------------------------------------------------------------------------*/
 
-void UGlideRenderDevice::ReadPixels( FColor* InPixels, UBOOL BackBuffer = false)
+void UGlideRenderDevice::ReadPixels( FColor* InPixels, UBOOL BackBuffer)
 { 
 	INT    X      = grSstScreenWidth();
 	INT    Y      = grSstScreenHeight();
