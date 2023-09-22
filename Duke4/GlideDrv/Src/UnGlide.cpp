@@ -486,10 +486,17 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 			sgrColorCombine( GR_COMBINE_FUNCTION_SCALE_OTHER, GR_COMBINE_FACTOR_LOCAL, GR_COMBINE_LOCAL_CONSTANT, GR_COMBINE_OTHER_TEXTURE, FXFALSE );
 		}
 	}
-	void SetBlending( DWORD PolyFlags )
+	void SetBlending( DWORD PolyFlags, DWORD PolyFlagsEx )
 	{
 		// Types.
-		if( PolyFlags & PF_Translucent )
+		if( PolyFlagsEx & (PFX_AlphaMap|PFX_Translucent2) )
+		{
+			if (PolyFlagsEx & PFX_AlphaMap)
+				guAlphaSource( GR_ALPHASOURCE_TEXTURE_ALPHA );
+
+			sgrAlphaBlendFunction( GR_BLEND_SRC_ALPHA, GR_BLEND_ONE_MINUS_SRC_ALPHA, GR_BLEND_ZERO, GR_BLEND_ZERO );
+		}
+		else if( PolyFlags & PF_Translucent )
 		{
 			sgrAlphaBlendFunction( GR_BLEND_ONE, GR_BLEND_ONE_MINUS_SRC_COLOR, GR_BLEND_ZERO, GR_BLEND_ZERO );
 			if( !(PolyFlags & PF_Occlude) )
@@ -537,7 +544,7 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 		// Remember flags.
 		OldPolyFlags = PolyFlags;
 	}
-	void ResetBlending( DWORD PolyFlags )
+	void ResetBlending( DWORD PolyFlags, DWORD PolyFlagsEx )
 	{
 		// Types.
 		if( PolyFlags & PF_Invisible )
@@ -1497,7 +1504,7 @@ void UGlideRenderDevice::DrawComplexSurface( FSceneNode* Frame, FSurfaceInfo& Su
 				FinalColor.B = 0.f;
 			}
 
-			SetBlending( Surface.PolyFlags );
+			SetBlending( Surface.PolyFlags, Surface.PolyFlagsEx );
 			States[GR_TMU0].SetTexture( *Surface.Texture, MainGlideFlags, 0.0 );
 			UpdateModulation( FinalColor, States[GR_TMU0].MaxColor, ModulateThings ); 
 			for( Poly=Facet.Polys; Poly; Poly=Poly->Next )
@@ -1506,7 +1513,7 @@ void UGlideRenderDevice::DrawComplexSurface( FSceneNode* Frame, FSurfaceInfo& Su
 				grDrawPolygonVertexList( Poly->NumPts, VERTS(Poly) );
 				Stats.Polys++;
 			}
-			ResetBlending( Surface.PolyFlags );
+			ResetBlending( Surface.PolyFlags, Surface.PolyFlagsEx );
 
 			if (bHeatVision || bNightVision)
 				FinalColor = OrigFinalColor;
@@ -1565,7 +1572,7 @@ void UGlideRenderDevice::DrawComplexSurface( FSceneNode* Frame, FSurfaceInfo& Su
 		}
 
 		// Draw with multitexture.
-		SetBlending( Surface.PolyFlags );
+		SetBlending( Surface.PolyFlags, Surface.PolyFlagsEx );
 #if 0
 		if(bGouraud)
 		{
@@ -1615,7 +1622,7 @@ void UGlideRenderDevice::DrawComplexSurface( FSceneNode* Frame, FSurfaceInfo& Su
 
 		}
 
-		ResetBlending ( Surface.PolyFlags );
+		ResetBlending ( Surface.PolyFlags, Surface.PolyFlagsEx );
 
 		if (bHeatVision || bNightVision)
 			FinalColor = OrigFinalColor;
@@ -1842,7 +1849,7 @@ void UGlideRenderDevice::DrawGouraudPolygon
 	}
 
 	// Draw it.
-	SetBlending( PolyFlags );
+	SetBlending( PolyFlags, PolyFlagsEx );
 
 	sguColorCombineFunction( (PolyFlags & PF_Modulated) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_ITRGB );
 
@@ -1858,7 +1865,7 @@ void UGlideRenderDevice::DrawGouraudPolygon
 		grTexClampMode(Tmu, GR_TEXTURECLAMP_WRAP, GR_TEXTURECLAMP_WRAP);
 	// ...CDH
 
-	ResetBlending( PolyFlags );
+	ResetBlending( PolyFlags, PolyFlagsEx );
 
 	// Fog.
 	if( (PolyFlags & (PF_RenderFog|PF_Translucent|PF_Modulated))==PF_RenderFog )
@@ -1976,7 +1983,7 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 		}
 	}
 	// Draw it.
-	SetBlending( PolyFlags );
+	SetBlending( PolyFlags|Texture.Texture->PolyFlags, PolyFlagsEx|Texture.Texture->PolyFlagsEx );
 
 	sguColorCombineFunction( (PolyFlags & PF_Modulated) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_CCRGB );
 
@@ -2048,7 +2055,7 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 		sgrAlphaTestFunction( GR_CMP_ALWAYS );
 	}
 
-	ResetBlending( PolyFlags );
+	ResetBlending( PolyFlags|Texture.Texture->PolyFlags, PolyFlagsEx|Texture.Texture->PolyFlagsEx );
 
 	// Fog.
 	if( PolyFlags & PF_RenderFog )
