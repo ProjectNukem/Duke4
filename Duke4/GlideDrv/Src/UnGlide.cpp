@@ -535,6 +535,10 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 		{
 			grTexFilterMode( GR_TMU0, GR_TEXTUREFILTER_POINT_SAMPLED, GR_TEXTUREFILTER_POINT_SAMPLED );
 		}
+		else
+		{
+			grTexFilterMode( GR_TMU0, GR_TEXTUREFILTER_BILINEAR, GR_TEXTUREFILTER_BILINEAR );
+		}
 		//if( (LockFlags & LOCKR_LightDiminish) && !(PolyFlags & PF_Unlit) )
 		//{
 		//	grFogMode( GR_FOG_WITH_TABLE );
