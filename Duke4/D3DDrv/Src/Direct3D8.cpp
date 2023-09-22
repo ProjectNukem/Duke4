@@ -1946,6 +1946,11 @@ class DLL_EXPORT UD3DRenderDevice : public URenderDevice
 
 	TArray<QueuedPolygon> QueuedPolygons;
 
+	bool __fastcall dnCanDrawParticles()
+	{
+		return true;
+	}
+
 	bool __fastcall QueuePolygonDoes()  
 	{ 
 		return true; 

@@ -1351,11 +1351,11 @@ void __fastcall ASoftParticleSystem::DrawParticles( void* _Frame )
 			Particles[i].WorldPreviousLocation=Particles[i].WorldLocation=Particles[i].Location;
 	}
 
-	if(DrawType==DT_Sprite||UseLines)
+	if((DrawType==DT_Sprite||UseLines) && Frame->Viewport->RenDev->dnCanDrawParticles())
 	{
 		// Attempt to draw the particles the new way, but revert to the old way if the new way isn't supported on the current render device.
 		Frame->Viewport->RenDev->dnDrawParticles(*this,Frame);
-	} else // Draw any generic unreal actor as a particle system:
+	} else if (!UseLines)// Draw any generic unreal actor as a particle system:
 	{	
 		FVector   InitialLocation=Location;
 		FRotator  InitialRotation=Rotation;
@@ -1375,7 +1375,7 @@ void __fastcall ASoftParticleSystem::DrawParticles( void* _Frame )
 			Rotation=Particles[i].Rotation3d;
 
 			if(Particles[i].Texture) Texture=Particles[i].Texture;
-			else					 Texture=InitialTexture;
+			else					 continue;
 
 			Alpha=Particles[i].Alpha;
 			BillboardRotation=Particles[i].Rotation;
