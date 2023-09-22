@@ -771,6 +771,7 @@ function PlayDeathShoulderRight()
 			break;
 	}
 	log( "* PlayDeathShoulderRight RandNum was "$RandNum$" deathsequence was "$DeathSequence );
+    PlayAllAnim(DeathSequence,,0.1,false);
 }	
 
 function PlayMovingAttack()
