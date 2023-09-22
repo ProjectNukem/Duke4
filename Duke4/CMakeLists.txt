@@ -111,4 +111,5 @@ if (MSVC_VERSION GREATER_EQUAL 1400)
     # Launch is not compatible with data execution prevention.
     # This is necessary to avoid crashes when executing code in Galaxy.
     target_link_options(Launch PRIVATE "/NXCOMPAT:NO")
+    target_link_options(DukeEd PRIVATE "/NXCOMPAT:NO")
 endif()
