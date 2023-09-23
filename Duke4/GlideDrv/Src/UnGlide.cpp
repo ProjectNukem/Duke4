@@ -53,6 +53,7 @@ enum EGlideFlags
 	GF_NoPalette    = 0x02, // Non-palettized.
 	GF_NoScale      = 0x04, // Scale for precision adjust.
 	GF_RGBA4        = 0x08, // RGBA 4444.
+	GF_NoMipMap		= 0x10,
 };
 
 // Pixel formats.
@@ -398,7 +399,7 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 			if( Info.Format!=TEXF_P8 )
 				GlideFlags |= GF_NoPalette;
 			if( Info.Format==TEXF_RGBA8 )
-				GlideFlags |= GF_RGBA4;
+				GlideFlags |= GF_RGBA4 | GF_NoMipMap;
 			QWORD TestID = Info.CacheID + (((QWORD)GlideFlags) << 59);
 			if( TestID!=TextureCacheID )
 			{
@@ -456,6 +457,12 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 			VScale  = Scale / Info.VScale;
 			UPan	= Info.Pan.X + PanBias*Info.UScale;
 			VPan	= Info.Pan.Y + PanBias*Info.VScale;
+
+			// Set mipmap mode
+			if( GlideFlags & GF_NoMipMap )
+				grTexMipMapMode( tmu, GR_MIPMAP_DISABLE, FXFALSE );
+			else
+				grTexMipMapMode( tmu, GR_MIPMAP_NEAREST, FXFALSE );
 		}
 		void CopyVerts( FSavedPoly* Poly )
 		{
@@ -486,7 +493,7 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 			sgrColorCombine( GR_COMBINE_FUNCTION_SCALE_OTHER, GR_COMBINE_FACTOR_LOCAL, GR_COMBINE_LOCAL_CONSTANT, GR_COMBINE_OTHER_TEXTURE, FXFALSE );
 		}
 	}
-	void SetBlending( DWORD PolyFlags, DWORD PolyFlagsEx )
+	void SetBlending( DWORD PolyFlags, DWORD PolyFlagsEx, UBOOL GouraudPolygon = FALSE )
 	{
 		// Types.
 		if( PolyFlagsEx & (PFX_AlphaMap|PFX_Translucent2) )
@@ -495,6 +502,12 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 				guAlphaSource( GR_ALPHASOURCE_TEXTURE_ALPHA );
 
 			sgrAlphaBlendFunction( GR_BLEND_SRC_ALPHA, GR_BLEND_ONE_MINUS_SRC_ALPHA, GR_BLEND_ZERO, GR_BLEND_ZERO );
+
+			if( GouraudPolygon )
+			{
+				// Use alpha test when drawing a gouraud polygon
+				sgrAlphaTestFunction( GR_CMP_GREATER );
+			}
 		}
 		else if( PolyFlags & PF_Translucent )
 		{
@@ -1853,7 +1866,7 @@ void UGlideRenderDevice::DrawGouraudPolygon
 	}
 
 	// Draw it.
-	SetBlending( PolyFlags, PolyFlagsEx );
+	SetBlending( PolyFlags, PolyFlagsEx, TRUE );
 
 	sguColorCombineFunction( (PolyFlags & PF_Modulated) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_ITRGB );
 
@@ -1987,7 +2000,7 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 		}
 	}
 	// Draw it.
-	SetBlending( PolyFlags|Texture.Texture->PolyFlags, PolyFlagsEx|Texture.Texture->PolyFlagsEx );
+	SetBlending( PolyFlags, PolyFlagsEx );
 
 	sguColorCombineFunction( (PolyFlags & PF_Modulated) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_CCRGB );
 
@@ -2059,7 +2072,7 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 		sgrAlphaTestFunction( GR_CMP_ALWAYS );
 	}
 
-	ResetBlending( PolyFlags|Texture.Texture->PolyFlags, PolyFlagsEx|Texture.Texture->PolyFlagsEx );
+	ResetBlending( PolyFlags, PolyFlagsEx );
 
 	// Fog.
 	if( PolyFlags & PF_RenderFog )
