@@ -1351,50 +1351,64 @@ void __fastcall ASoftParticleSystem::DrawParticles( void* _Frame )
 			Particles[i].WorldPreviousLocation=Particles[i].WorldLocation=Particles[i].Location;
 	}
 
-	if((DrawType==DT_Sprite||UseLines) && Frame->Viewport->RenDev->dnCanDrawParticles())
+	// Attempt to draw the particles the new way, but revert to the old way if the new way isn't supported on the current render device.
+	if( UseLines )
 	{
-		// Attempt to draw the particles the new way, but revert to the old way if the new way isn't supported on the current render device.
-		Frame->Viewport->RenDev->dnDrawParticles(*this,Frame);
-	} else if (!UseLines)// Draw any generic unreal actor as a particle system:
-	{	
-		FVector   InitialLocation=Location;
-		FRotator  InitialRotation=Rotation;
-		UTexture *InitialTexture=Texture;
-		FLOAT     InitialDrawScale=DrawScale;
-		FLOAT	  InitialAlpha=Alpha;
-		FLOAT     InitialBillboardRotation=BillboardRotation;
-
-		UBOOL InitialBHidden=bHidden;
-		bHidden=false;
-		
-		ParticleRecursing=true;
-
-		for(INT i=0;i<HighestParticleNumber;i++)	
+		if( Frame->Viewport->RenDev->dnCanDrawLineParticles() )
 		{
-			Location=Particles[i].WorldLocation;
-			Rotation=Particles[i].Rotation3d;
-
-			if(Particles[i].Texture) Texture=Particles[i].Texture;
-			else					 continue;
-
-			Alpha=Particles[i].Alpha;
-			BillboardRotation=Particles[i].Rotation;
-			DrawScale=Particles[i].DrawScale;
-			Frame->Viewport->Canvas->Render->DrawActor(Frame,this); 
+			Frame->Viewport->RenDev->dnDrawParticles(*this, Frame);
 		}
-
-		ParticleRecursing=false;
-		bHidden=InitialBHidden;
-		Rotation=InitialRotation;
-		Location=InitialLocation;
-		Texture=InitialTexture;
-		DrawScale=InitialDrawScale;
-		Alpha=InitialAlpha;
-		BillboardRotation=InitialBillboardRotation;
+	}
+	else if( DrawType == DT_Sprite && Frame->Viewport->RenDev->dnCanDrawParticles() )
+	{
+		Frame->Viewport->RenDev->dnDrawParticles(*this, Frame);
+	}
+	else
+	{
+		// Draw any generic unreal actor as a particle system:
+		DrawParticlesAsActors(Frame);
 	}
 
 	Frame->Viewport->CurrentTime=OriginalTime;
-	
+}
+
+void ASoftParticleSystem::DrawParticlesAsActors(FSceneNode* Frame)
+{
+	FParticle *Particles=(FParticle *)ParticleSystemHandle;
+	FVector   InitialLocation=Location;
+	FRotator  InitialRotation=Rotation;
+	UTexture *InitialTexture=Texture;
+	FLOAT     InitialDrawScale=DrawScale;
+	FLOAT	  InitialAlpha=Alpha;
+	FLOAT     InitialBillboardRotation=BillboardRotation;
+
+	UBOOL InitialBHidden=bHidden;
+	bHidden=false;
+		
+	ParticleRecursing=true;
+
+	for(INT i=0;i<HighestParticleNumber;i++)	
+	{
+		Location=Particles[i].WorldLocation;
+		Rotation=Particles[i].Rotation3d;
+
+		if(Particles[i].Texture) Texture=Particles[i].Texture;
+		else					 continue;
+
+		Alpha=Particles[i].Alpha;
+		BillboardRotation=Particles[i].Rotation;
+		DrawScale=Particles[i].DrawScale;
+		Frame->Viewport->Canvas->Render->DrawActor(Frame,this); 
+	}
+
+	ParticleRecursing=false;
+	bHidden=InitialBHidden;
+	Rotation=InitialRotation;
+	Location=InitialLocation;
+	Texture=InitialTexture;
+	DrawScale=InitialDrawScale;
+	Alpha=InitialAlpha;
+	BillboardRotation=InitialBillboardRotation;
 }
 
 void __fastcall ASoftParticleSystem::execGetParticleStats( FFrame& Stack, RESULT_DECL )

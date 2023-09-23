@@ -22,6 +22,7 @@
 	inline void __fastcall SpawnFriend(ASoftParticleSystem *Friend, FVector AtLocation);			// Spawn a friend particle.
 
 	void __fastcall DrawParticles( void* Frame );
+	void __fastcall DrawParticlesAsActors( FSceneNode* Frame );
 
 	FVector __fastcall AffectorFilterMotion(FVector v, ASoftParticleAffector *a);
 

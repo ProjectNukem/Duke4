@@ -150,6 +150,7 @@ class ENGINE_API URenderDevice : public USubsystem
 		Queue3DLine(Frame,Color,LineFlags,OldLocation,NewLocation);	
 	}
 	virtual bool __fastcall dnCanDrawParticles() { return false; }
+	virtual bool __fastcall dnCanDrawLineParticles() { return dnCanDrawParticles(); }
 	virtual void __fastcall dnDrawParticles( ASoftParticleSystem &System, FSceneNode *Frame ) {}
 	virtual void __fastcall dnDrawBeam( ABeamSystem &System, FSceneNode *Frame ) {}
 	
