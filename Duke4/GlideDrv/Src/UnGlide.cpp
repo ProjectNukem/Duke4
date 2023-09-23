@@ -2177,7 +2177,7 @@ void UGlideRenderDevice::dnDrawParticles( ASoftParticleSystem& System, FSceneNod
 					}
 				}
 			}
-			dnDraw3DLine(Frame,Particles[i].Texture,Particles[i].Texture->PolyFlags, PreviousLocation, NextLocation, System.LineStartWidth, System.LineEndWidth, System.LineStartColor, System.LineEndColor);
+			dnDraw3DLine(Frame,Particles[i].Texture,0, PreviousLocation, NextLocation, System.LineStartWidth, System.LineEndWidth, System.LineStartColor, System.LineEndColor);
 		}
 
 		return;
@@ -2473,6 +2473,8 @@ void __fastcall UGlideRenderDevice::dnDraw3DLine
 	UBOOL NonOneWidth=true;
 
 	if((StartWidth==1.0)&&(EndWidth==1.0)) NonOneWidth=false;
+	if(Texture) PolyFlags |= Texture->PolyFlags;
+	DWORD PolyFlagsEx = Texture ? Texture->PolyFlagsEx : 0;
 
 	FLOAT SX2 = Frame->FX2;
 	FLOAT SY2 = Frame->FY2;
@@ -2676,7 +2678,7 @@ void __fastcall UGlideRenderDevice::dnDraw3DLine
 
 	guAlphaSource( GR_ALPHASOURCE_ITERATED_ALPHA );
 	sguColorCombineFunction(GR_COLORCOMBINE_ITRGB);
-	SetBlending(Texture->PolyFlags|PF_Translucent, Texture->PolyFlagsEx);
+	SetBlending(PolyFlags|PF_Translucent, PolyFlagsEx);
 
 	// Source position:
 	GrVertex V1, V2;
