@@ -281,8 +281,10 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 					FLOAT rotationOffsetY
 	);
 	UBOOL Exec( const TCHAR* Cmd, FOutputDevice& Ar );
-	//void __fastcall dnDraw3DLine( FSceneNode* Frame, UTexture *Texture, DWORD PolyFlags, FVector Start, FVector End, FLOAT StartWidth, FLOAT EndWidth, FColor StartColor, FColor EndColor );
-	//void dnDrawParticles( ASoftParticleSystem *System, FSceneNode* Frame, FParticle *Particles, INT ParticleCount, DWORD PolyFlags,UBOOL VariableAlpha,FLOAT SystemAlphaScale);
+	bool __fastcall dnCanDrawParticles() { return false; } // Prefer actor fallback for non-line particles
+	bool __fastcall dnCanDrawLineParticles() { return true; }
+	void __fastcall dnDraw3DLine( FSceneNode* Frame, UTexture *Texture, DWORD PolyFlags, FVector Start, FVector End, FLOAT StartWidth, FLOAT EndWidth, FColor StartColor, FColor EndColor );
+	void __fastcall dnDrawParticles( ASoftParticleSystem& System, FSceneNode* Frame );
 	void __fastcall Draw3DLine( FSceneNode* Frame, FPlane Color, DWORD	LineFlags, FVector P1, FVector P2 );
 	void __fastcall Draw2DLine( FSceneNode* Frame, FPlane Color, DWORD LineFlags, FVector P1, FVector P2 );
 	void __fastcall Draw2DPoint( FSceneNode* Frame, FPlane Color, DWORD LineFlags, FLOAT X1, FLOAT Y1, FLOAT X2, FLOAT Y2, FLOAT Z );
@@ -508,6 +510,8 @@ class DLL_EXPORT_CLASS UGlideRenderDevice : public URenderDevice
 				// Use alpha test when drawing a gouraud polygon
 				sgrAlphaTestFunction( GR_CMP_GREATER );
 			}
+
+			sguColorCombineFunction( GR_COLORCOMBINE_TEXTURE_TIMES_ITRGB );
 		}
 		else if( PolyFlags & PF_Translucent )
 		{
@@ -1866,10 +1870,9 @@ void UGlideRenderDevice::DrawGouraudPolygon
 	}
 
 	// Draw it.
-	SetBlending( PolyFlags, PolyFlagsEx, TRUE );
-
-	sguColorCombineFunction( (PolyFlags & PF_Modulated) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_ITRGB );
-
+	SetBlending( PolyFlags|Texture.Texture->PolyFlags, PolyFlagsEx|Texture.Texture->PolyFlagsEx, TRUE );
+	sguColorCombineFunction( (PolyFlags & PF_Modulated) && !(PolyFlagsEx & PFX_DarkenModulate) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_ITRGB );
+	
 	// CDH... decals
 	if (PolyFlags & PF_MeshUVClamp)
 		grTexClampMode(Tmu, GR_TEXTURECLAMP_CLAMP, GR_TEXTURECLAMP_CLAMP);
@@ -1882,7 +1885,7 @@ void UGlideRenderDevice::DrawGouraudPolygon
 		grTexClampMode(Tmu, GR_TEXTURECLAMP_WRAP, GR_TEXTURECLAMP_WRAP);
 	// ...CDH
 
-	ResetBlending( PolyFlags, PolyFlagsEx );
+	ResetBlending( PolyFlags|Texture.Texture->PolyFlags, PolyFlagsEx|Texture.Texture->PolyFlagsEx );
 
 	// Fog.
 	if( (PolyFlags & (PF_RenderFog|PF_Translucent|PF_Modulated))==PF_RenderFog )
@@ -2000,9 +2003,9 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 		}
 	}
 	// Draw it.
-	SetBlending( PolyFlags, PolyFlagsEx );
+	SetBlending( PolyFlags|Texture.Texture->PolyFlags, PolyFlagsEx|Texture.Texture->PolyFlagsEx );
 
-	sguColorCombineFunction( (PolyFlags & PF_Modulated) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_CCRGB );
+	sguColorCombineFunction( (PolyFlags & PF_Modulated) && !(PolyFlagsEx & PFX_DarkenModulate) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_CCRGB );
 
 	if(bilinear)	// NJS: Bileniar filtering
 		grTexFilterMode(GR_TMU0,GR_TEXTUREFILTER_BILINEAR,GR_TEXTUREFILTER_BILINEAR);
@@ -2022,8 +2025,8 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 						FXFALSE
 		);
 		
-		grAlphaCombine(//	GR_COMBINE_FUNCTION_SCALE_OTHER,	
-						GR_COMBINE_FUNCTION_SCALE_OTHER_MINUS_LOCAL, 
+		grAlphaCombine(	GR_COMBINE_FUNCTION_SCALE_OTHER,	
+						//GR_COMBINE_FUNCTION_SCALE_OTHER_MINUS_LOCAL, 
 		  				GR_COMBINE_FACTOR_ONE, 
 						GR_COMBINE_LOCAL_ITERATED, 
 						GR_COMBINE_OTHER_TEXTURE, 
@@ -2047,7 +2050,7 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 
 		}
 
-		//if(PolyFlags&PF_Masked)
+		if(PolyFlags&PF_Masked)
 		{
 			sgrAlphaTestFunction(GR_CMP_GREATER); 
 			grAlphaTestReferenceValue(0);
@@ -2072,7 +2075,7 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 		sgrAlphaTestFunction( GR_CMP_ALWAYS );
 	}
 
-	ResetBlending( PolyFlags, PolyFlagsEx );
+	ResetBlending( PolyFlags|Texture.Texture->PolyFlags, PolyFlagsEx|Texture.Texture->PolyFlagsEx );
 
 	// Fog.
 	if( PolyFlags & PF_RenderFog )
@@ -2092,11 +2095,18 @@ void UGlideRenderDevice::DrawTile(FSceneNode* Frame,
 	// Done.
 	Texture.Palette[0] = Saved;
 }
-#if 0
-void UGlideRenderDevice::dnDrawParticles( ASoftParticleSystem *System, FSceneNode* Frame, FParticle *Particles, INT ParticleCount, DWORD PolyFlags, UBOOL VariableAlpha,FLOAT SystemAlphaScale)
+
+void UGlideRenderDevice::dnDrawParticles( ASoftParticleSystem& System, FSceneNode* Frame )
 {
 	INT	  X1, Y1, X2, Y2;
 	FLOAT ScreenX, ScreenY, Z, Persp;
+
+	DWORD PolyFlags = 0, PolyFlagsEx = 0;
+	INT ParticleCount = System.HighestParticleNumber;
+	FParticle *Particles=(FParticle *)System.ParticleSystemHandle;
+	UBOOL VariableAlpha=true;
+	if((System.AlphaStart==1.f)&&(System.AlphaEnd==1.f)) VariableAlpha=false;
+	FLOAT SystemAlphaScale=System.AlphaStartUseSystemAlpha?1.f:System.SystemAlphaScale; 
 
 	// Setup color.
 	BOOL   BlendingModeSet=0;
@@ -2111,6 +2121,67 @@ void UGlideRenderDevice::dnDrawParticles( ASoftParticleSystem *System, FSceneNod
 	const INT Tmu = 0;
 
 	FLOAT UF=0.f, VF=0.f;
+
+	if(System.UseLines)
+	{
+		for(INT i=0; i<ParticleCount; i++)
+		{
+			FVector PreviousLocation;
+			FVector NextLocation;
+
+			// Am I drawing a series of connected particle lines?
+			if(System.Connected)
+			{
+				int SuccessorIndex=-1;
+
+				// Attempt to find my successor: 
+				// First try the very next particle in sequence.  In non-starved particle systems, where particles have a constant lifetime, it is VERY likely to be the next particle in sequence. 
+				if((i<(ParticleCount-1))&&((Particles[i+1].SpawnNumber)==(Particles[i].SpawnNumber+1)))
+					SuccessorIndex=i+1;
+				else
+				{
+					// Scan through the particles and try to find my successor:
+					for(INT j=0;j<ParticleCount;j++)							 // Scan through all potentially active particles.
+						if(Particles[j].SpawnNumber==Particles[i].SpawnNumber+1) // And it's my successor.
+						{
+							SuccessorIndex=j;
+							break;
+						}
+				}
+
+				if(SuccessorIndex==-1) continue; // No sucessor found, can't draw this segment.
+				PreviousLocation=Particles[i].Location;
+				NextLocation=Particles[SuccessorIndex].Location;
+			} else
+			{
+				PreviousLocation=Particles[i].PreviousLocation;
+				NextLocation=Particles[i].Location;
+
+				// If drawscale isn't one, then compute new line length:
+				if((Particles[i].DrawScale!=1)||System.ConstantLength)
+				{
+					FVector Distance=NextLocation-PreviousLocation;
+					FLOAT   Length=System.ConstantLength?1:Distance.Size();
+						
+					if(Length)
+					{
+						FVector Direction=Distance;
+						Direction.Normalize();
+						FVector Midpoint=System.ConstantLength?NextLocation:(PreviousLocation+Direction*(Length/2));
+
+						Length*=Particles[i].DrawScale;
+						Length/=2;
+
+						PreviousLocation=Midpoint-(Direction*Length);
+						NextLocation=Midpoint+(Direction*Length);
+					}
+				}
+			}
+			dnDraw3DLine(Frame,Particles[i].Texture,Particles[i].Texture->PolyFlags, PreviousLocation, NextLocation, System.LineStartWidth, System.LineEndWidth, System.LineStartColor, System.LineEndColor);
+		}
+
+		return;
+	}
 			
 	for(INT i=0;i<ParticleCount;i++)
 	{
@@ -2133,6 +2204,9 @@ void UGlideRenderDevice::dnDrawParticles( ASoftParticleSystem *System, FSceneNod
 			Saved= CurrentTextureInfo.Palette[0];
 			UF=CurrentTextureInfo.UScale*CurrentTextureInfo.USize/CurrentTexture->USize; 
 			VF=CurrentTextureInfo.VScale*CurrentTextureInfo.VSize/CurrentTexture->VSize; 
+			PolyFlags = CurrentTexture->PolyFlags;
+			PolyFlagsEx = CurrentTexture->PolyFlagsEx;
+			if (VariableAlpha) PolyFlags |= PF_Translucent;
 			States[Tmu].SetTexture( CurrentTextureInfo, GF_NoScale|((PolyFlags&PF_Masked) ? GF_Alpha : 0), 0.0 );
 
 			if(!BlendingModeSet)
@@ -2145,20 +2219,21 @@ void UGlideRenderDevice::dnDrawParticles( ASoftParticleSystem *System, FSceneNod
 					PolyFlags |= PF_Highlighted;
 
 
-				SetBlending( PolyFlags );
-				sguColorCombineFunction( (PolyFlags & PF_Modulated) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_CCRGB );
+				SetBlending( PolyFlags, PolyFlagsEx );
+				sguColorCombineFunction( (PolyFlags & PF_Modulated) && !(PolyFlagsEx & PFX_DarkenModulate) ? GR_COLORCOMBINE_DECAL_TEXTURE : GR_COLORCOMBINE_TEXTURE_TIMES_CCRGB);
 
 				// NJS: real alpha effects:
 				if(VariableAlpha)
 				{
-					sgrColorCombine(GR_COMBINE_FUNCTION_SCALE_OTHER, 
+					sgrColorCombine(GR_COMBINE_FUNCTION_SCALE_OTHER,
 									GR_COMBINE_FACTOR_LOCAL,
 									GR_COMBINE_LOCAL_CONSTANT, 
 									GR_COMBINE_OTHER_TEXTURE, 
 									FXFALSE
 					);
 					
-					grAlphaCombine( GR_COMBINE_FUNCTION_SCALE_OTHER_MINUS_LOCAL, 
+					grAlphaCombine( GR_COMBINE_FUNCTION_SCALE_OTHER,
+									//GR_COMBINE_FUNCTION_SCALE_OTHER_MINUS_LOCAL,
 		  							GR_COMBINE_FACTOR_ONE, 
 									GR_COMBINE_LOCAL_ITERATED, 
 									GR_COMBINE_OTHER_TEXTURE, 
@@ -2168,10 +2243,10 @@ void UGlideRenderDevice::dnDrawParticles( ASoftParticleSystem *System, FSceneNod
 					/* VERY MUCH HAS THE CIGAR: */
 					sgrAlphaBlendFunction( GR_BLEND_SRC_ALPHA, GR_BLEND_ONE, GR_BLEND_ZERO , GR_BLEND_ZERO );
 
-					if(PolyFlags&PF_Masked)
+					if((PolyFlags&PF_Masked))
 					{
-						sgrAlphaTestFunction(GR_CMP_GREATER); 
-						grAlphaTestReferenceValue(0);
+						//sgrAlphaTestFunction(GR_CMP_GREATER); 
+						//grAlphaTestReferenceValue(0);
 					}
 				} 
 			}
@@ -2316,14 +2391,13 @@ void UGlideRenderDevice::dnDrawParticles( ASoftParticleSystem *System, FSceneNod
 			sgrAlphaTestFunction(GR_CMP_ALWAYS);
 		}
 
-		ResetBlending(PolyFlags);
+		ResetBlending(CurrentTexture->PolyFlags, CurrentTexture->PolyFlagsEx);
 		CurrentTextureInfo.Palette[0]=Saved;
 		CurrentTexture->Unlock(CurrentTextureInfo);
 		CurrentTexture=NULL;
 	}
 }
 
-#endif
 /*-----------------------------------------------------------------------------
 	Command line.
 -----------------------------------------------------------------------------*/
@@ -2381,7 +2455,7 @@ UBOOL UGlideRenderDevice::Exec( const TCHAR* Cmd, FOutputDevice& Ar )
 /*-----------------------------------------------------------------------------
 	Unimplemented.
 -----------------------------------------------------------------------------*/
-#if 0
+#define LINE_NEAR_CLIP_Z 1.0
 
 void __fastcall UGlideRenderDevice::dnDraw3DLine
 ( 
@@ -2591,15 +2665,18 @@ void __fastcall UGlideRenderDevice::dnDraw3DLine
 	}
 
 	// Draw it.
-	if(LineFlags&LINE_AntiAliased)
+	/*
+	if (LineFlags & LINE_AntiAliased)
 		sgrAlphaBlendFunction( GR_BLEND_SRC_ALPHA, GR_BLEND_SRC_COLOR, GR_BLEND_ZERO, GR_BLEND_ZERO );
 	else if(LineFlags&LINE_Transparent)
 		sgrAlphaBlendFunction( GR_BLEND_DST_COLOR, GR_BLEND_SRC_COLOR, GR_BLEND_ZERO, GR_BLEND_ZERO );
 	else
 		sgrAlphaBlendFunction(GR_BLEND_ONE, GR_BLEND_ONE_MINUS_SRC_COLOR, GR_BLEND_ZERO, GR_BLEND_ZERO);
+	*/
 
 	guAlphaSource( GR_ALPHASOURCE_ITERATED_ALPHA );
 	sguColorCombineFunction(GR_COLORCOMBINE_ITRGB);
+	SetBlending(Texture->PolyFlags|PF_Translucent, Texture->PolyFlagsEx);
 
 	// Source position:
 	GrVertex V1, V2;
@@ -2629,8 +2706,8 @@ void __fastcall UGlideRenderDevice::dnDraw3DLine
 
 	if(!NonOneWidth)
 	{
-		if(LineFlags&LINE_AntiAliased) grAADrawLine(&V1,&V2);
-		else						   grDrawLine(&V1, &V2);
+		/*if (LineFlags & LINE_AntiAliased) grAADrawLine(&V1, &V2);
+		else*/						   grDrawLine(&V1, &V2);
 	} else
 	{
 		GrVertex V3, V4;
@@ -2660,9 +2737,6 @@ void __fastcall UGlideRenderDevice::dnDraw3DLine
 
 	sgrAlphaBlendFunction( GR_BLEND_ONE, GR_BLEND_ZERO, GR_BLEND_ZERO, GR_BLEND_ZERO );
 }
-
-#endif
-#define LINE_NEAR_CLIP_Z 1.0
 
 void UGlideRenderDevice::Draw3DLine
 (
