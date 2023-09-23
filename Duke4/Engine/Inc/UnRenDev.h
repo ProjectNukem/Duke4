@@ -79,7 +79,7 @@ class ENGINE_API URenderDevice : public USubsystem
 	virtual bool __fastcall QueuePolygonBegin(FSceneNode *Frame) { CurrentFrame=Frame; return false; }
 	virtual void __fastcall QueuePolygonEnd(DWORD ProjectorFlags = 0)	{}
 	virtual void __fastcall QueuePolygon( /*FSceneNode* Frame, */FTextureInfo* Info, FTransTexture** Pts, INT NumPts, DWORD PolyFlags, DWORD ExFlags, FSpanBuffer *Span ) 
-	{ DrawGouraudPolygon(CurrentFrame,*Info,Pts,NumPts,PolyFlags,Span); }
+	{ DrawGouraudPolygon(CurrentFrame,*Info,Pts,NumPts,PolyFlags,Span,ExFlags); }
 	
 	// JEP... (for building shadow textures fast)
 	virtual bool __fastcall QueuePolygonBeginFast(FSceneNode *Frame) { CurrentFrame=Frame; return false; }
