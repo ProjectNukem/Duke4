@@ -19,6 +19,17 @@ if ("${CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
     set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -DWIN32 -o <OBJECT> <SOURCE>")
 endif()
 
+# Macros for adding compile options and definitions scoped to C/C++ only.
+# This avoids passing these options to NASM which does not support them.
+macro(add_c_cxx_compile_option COMPILE_OPTION)
+    string(JOIN " " CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" "${COMPILE_OPTION}")
+    string(JOIN " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" "${COMPILE_OPTION}")
+endmacro()
+
+macro(add_c_cxx_compile_definition COMPILE_DEFINITION)
+    add_c_cxx_compile_option("/D${COMPILE_DEFINITION}")
+endmacro()
+
 # Init project
 project(Duke4 C CXX ASM_MASM ASM_NASM)
 
@@ -32,36 +43,36 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 # There are multiple locations in the source that invoke
 # va_start with a C++ reference. Newer versions of VS need
 # this to be defined in order to suppress errors for it.
-add_compile_definitions(_CRT_NO_VA_START_VALIDATION)
+add_c_cxx_compile_definition("_CRT_NO_VA_START_VALIDATION")
 
 # CRT warnings can become noisy when using newer tooling.
-add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
+add_c_cxx_compile_definition("_CRT_SECURE_NO_WARNINGS")
 
 # Add default compile options (structure packing, etc)
-add_compile_options("/EHsc" "/vd0" "/Zp4")
-add_compile_definitions(WINDOWS_IGNORE_PACKING_MISMATCH)
+add_c_cxx_compile_option("/EHsc" "/vd0" "/Zp4")
+add_c_cxx_compile_definition("WINDOWS_IGNORE_PACKING_MISMATCH")
 
 # Enable /G6 (optimize for Pentium Pro) on VS5 and VS6
 if (MSVC_VERSION EQUAL 1100 OR MSVC_VERSION EQUAL 1200)
-    add_compile_definitions("/G6")
+    add_c_cxx_compile_option("/G6")
 endif()
 
 # Add MSVC conformance and compatibility options
 if (MSVC_VERSION GREATER_EQUAL 1400)
     # Force Conformance in for Loop Scope
-    add_compile_options("/Zc:forScope-")
+    add_c_cxx_compile_option("/Zc:forScope-")
 
     # wchar_t Is Native Type
-    add_compile_options("/Zc:wchar_t-")
+    add_c_cxx_compile_option("/Zc:wchar_t-")
 
     # Call member new/delete on arrays
-    add_compile_options("/Zc:zeroSizeArrayNew-")
+    add_c_cxx_compile_option("/Zc:zeroSizeArrayNew-")
 
     # Assume operator new throws
-    add_compile_options("/Zc:throwingNew-")
+    add_c_cxx_compile_option("/Zc:throwingNew-")
 
     # Enable Global Sized Deallocation Functions
-    add_compile_options("/Zc:sizedDealloc-")
+    add_c_cxx_compile_option("/Zc:sizedDealloc-")
 
     # Disable safe exception handlers
     add_link_options("/SAFESEH:NO")
