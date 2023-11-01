@@ -49,7 +49,9 @@ add_c_cxx_compile_definition("_CRT_NO_VA_START_VALIDATION")
 add_c_cxx_compile_definition("_CRT_SECURE_NO_WARNINGS")
 
 # Add default compile options (structure packing, etc)
-add_c_cxx_compile_option("/EHsc" "/vd0" "/Zp4")
+add_c_cxx_compile_option("/EHsc")
+add_c_cxx_compile_option("/vd0")
+add_c_cxx_compile_option("/Zp4")
 add_c_cxx_compile_definition("WINDOWS_IGNORE_PACKING_MISMATCH")
 
 # Enable /G6 (optimize for Pentium Pro) on VS5 and VS6
