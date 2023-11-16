@@ -74,10 +74,10 @@ add_library(xcore_console STATIC conapp.cpp)
 
 target_link_options(xcore PRIVATE "/BASE:0x21000000")
 
-target_compile_definitions(xcore PRIVATE XCORE_LIBRARY)
+target_compile_definitions(xcore PRIVATE $<$<COMPILE_LANGUAGE:C,CXX>:XCORE_LIBRARY>)
 target_compile_definitions(xcore_winapp PRIVATE XCORE_PURE)
 target_compile_definitions(xcore_console PRIVATE XCORE_PURE)
 
-target_include_directories(xcore PRIVATE ${INCLUDE_DIRECTORIES})
+target_include_directories(xcore PRIVATE $<$<COMPILE_LANGUAGE:C,CXX>:${INCLUDE_DIRECTORIES}>)
 target_include_directories(xcore_winapp PRIVATE ${INCLUDE_DIRECTORIES})
 target_include_directories(xcore_console PRIVATE ${INCLUDE_DIRECTORIES})

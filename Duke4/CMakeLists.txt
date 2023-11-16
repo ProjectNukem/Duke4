@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.15)
 
 # Environment
 cmake_path(CONVERT "$ENV{MASM_BIN}" TO_CMAKE_PATH_LIST MASM_BIN)
@@ -6,29 +6,7 @@ set(MASM_DIR ${MASM_BIN} CACHE PATH "Path to directory containing ML.EXE")
 
 # Set MASM and NASM locations
 set(CMAKE_ASM_MASM_COMPILER "${MASM_DIR}/ML.EXE")
-
-# The Visual Studio generator seems to ignore CMAKE_ASM_NASM_COMPILE_OBJECT,
-# so for that scenario we'll just allow CMake to fall back to whatever NASM
-# is installed on the machine.
-if ("${CMAKE_GENERATOR}" STREQUAL "NMake Makefiles")
-    set(CMAKE_ASM_NASM_COMPILER "${CMAKE_SOURCE_DIR}/BIN/NASM/NASM.EXE")
-
-    # We don't want to forward include paths or defines to NASM, because it breaks the compile.
-    # Notably, the build of NASM included with the leaked source can't handle -I include paths.
-    set(CMAKE_ASM_NASM_OBJECT_FORMAT "win32")
-    set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -DWIN32 -o <OBJECT> <SOURCE>")
-endif()
-
-# Macros for adding compile options and definitions scoped to C/C++ only.
-# This avoids passing these options to NASM which does not support them.
-macro(add_c_cxx_compile_option COMPILE_OPTION)
-    string(JOIN " " CMAKE_C_FLAGS "${CMAKE_C_FLAGS}" "${COMPILE_OPTION}")
-    string(JOIN " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" "${COMPILE_OPTION}")
-endmacro()
-
-macro(add_c_cxx_compile_definition COMPILE_DEFINITION)
-    add_c_cxx_compile_option("/D${COMPILE_DEFINITION}")
-endmacro()
+set(CMAKE_ASM_NASM_COMPILER "${CMAKE_SOURCE_DIR}/BIN/NASM/NASM.EXE")
 
 # Init project
 project(Duke4 C CXX ASM_MASM ASM_NASM)
@@ -40,48 +18,64 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
-# There are multiple locations in the source that invoke
-# va_start with a C++ reference. Newer versions of VS need
-# this to be defined in order to suppress errors for it.
-add_c_cxx_compile_definition("_CRT_NO_VA_START_VALIDATION")
+add_compile_definitions(
+    # There are multiple locations in the source that invoke
+    # va_start with a C++ reference. Newer versions of VS need
+    # this to be defined in order to suppress errors for it.
+    $<$<COMPILE_LANGUAGE:C,CXX>:_CRT_NO_VA_START_VALIDATION>
 
-# CRT warnings can become noisy when using newer tooling.
-add_c_cxx_compile_definition("_CRT_SECURE_NO_WARNINGS")
+    # CRT warnings can become noisy when using newer tooling.
+    $<$<COMPILE_LANGUAGE:C,CXX>:_CRT_SECURE_NO_WARNINGS>
 
-# Add default compile options (structure packing, etc)
-add_c_cxx_compile_option("/EHsc")
-add_c_cxx_compile_option("/vd0")
-add_c_cxx_compile_option("/Zp4")
-add_c_cxx_compile_definition("WINDOWS_IGNORE_PACKING_MISMATCH")
+    # Prevent compile errors caused by 4-byte struct packing.
+    $<$<COMPILE_LANGUAGE:C,CXX>:WINDOWS_IGNORE_PACKING_MISMATCH>
+)
+
+add_compile_options(
+    # Enable standard C++ stack unwinding and assume that extern "C"
+    # functions will never throw a C++ exception. This setting was
+    # present in the original .dsp project files.
+    $<$<COMPILE_LANGUAGE:C,CXX>:/EHsc>
+
+    # Suppress the vtordisp constructor/destructor displacement member.
+    # This setting was present in the original .dsp project files.
+    $<$<COMPILE_LANGUAGE:C,CXX>:/vd0>
+
+    # 4-byte structure packing. Necessary to ensure struct layouts match
+    # what UnrealScript expects.
+    $<$<COMPILE_LANGUAGE:C,CXX>:/Zp4>
+)
 
 # Enable /G6 (optimize for Pentium Pro) on VS5 and VS6
 if (MSVC_VERSION EQUAL 1100 OR MSVC_VERSION EQUAL 1200)
-    add_c_cxx_compile_option("/G6")
+    add_compile_options($<$<COMPILE_LANGUAGE:C,CXX>:/G6>)
 endif()
 
 # Add MSVC conformance and compatibility options
 if (MSVC_VERSION GREATER_EQUAL 1400)
-    # Force Conformance in for Loop Scope
-    add_c_cxx_compile_option("/Zc:forScope-")
+    add_compile_options(
+        # Force Conformance in for Loop Scope
+        $<$<COMPILE_LANGUAGE:C,CXX>:/Zc:forScope->
 
-    # wchar_t Is Native Type
-    add_c_cxx_compile_option("/Zc:wchar_t-")
-
-    # Call member new/delete on arrays
-    add_c_cxx_compile_option("/Zc:zeroSizeArrayNew-")
-
-    # Assume operator new throws
-    add_c_cxx_compile_option("/Zc:throwingNew-")
-
-    # Enable Global Sized Deallocation Functions
-    add_c_cxx_compile_option("/Zc:sizedDealloc-")
+        # wchar_t Is Native Type
+        $<$<COMPILE_LANGUAGE:C,CXX>:/Zc:wchar_t->
+        
+        # Call member new/delete on arrays
+        $<$<COMPILE_LANGUAGE:C,CXX>:/Zc:zeroSizeArrayNew->
+        
+        # Assume operator new throws
+        $<$<COMPILE_LANGUAGE:C,CXX>:/Zc:throwingNew->
+        
+        # Enable Global Sized Deallocation Functions
+        $<$<COMPILE_LANGUAGE:C,CXX>:/Zc:sizedDealloc->
+    )
 
     # Disable safe exception handlers
     add_link_options("/SAFESEH:NO")
 endif()
 
 # DirectX
-include_directories(DirectX8/Inc)
+include_directories($<$<COMPILE_LANGUAGE:C,CXX>:${CMAKE_SOURCE_DIR}/DirectX8/Inc>)
 link_directories(DirectX8/Lib)
 
 # Projects
