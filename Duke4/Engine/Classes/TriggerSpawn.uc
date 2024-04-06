@@ -106,8 +106,10 @@ function actor DoSpawn()
 		a.Velocity.Y+=VelocityVariance.Y*frand();
 		a.Velocity.Z+=VelocityVariance.Z*frand();
 		
-		if(AssignCollisionRadius) 	a.CollisionRadius=NewCollisionRadius;
-		if(AssignCollisionHeight)	a.CollisionHeight=NewCollisionHeight;
+		if(AssignCollisionRadius && AssignCollisionHeight) a.SetCollisionSize(NewCollisionRadius, NewCollisionHeight);
+		else if(AssignCollisionRadius) a.SetCollisionSize(NewCollisionRadius, a.CollisionHeight);
+		else if(AssignCollisionHeight) a.SetCollisionSize(a.CollisionRadius, NewCollisionHeight);
+
 		if(AssignbCollideActors)		a.SetCollision(NewbCollideActors,,);
 		if(AssignbBlockActors)		a.SetCollision(,bBlockActors,);
 		if(AssignbBlockPlayers)		a.SetCollision(,,bBlockPlayers);

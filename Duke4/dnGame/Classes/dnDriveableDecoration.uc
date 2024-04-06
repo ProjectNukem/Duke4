@@ -207,8 +207,7 @@ function PostBeginPlay()
 	MeshLowerHeight=-BikeMeshZOffset;
 	bMeshLowerByCollision=false;
 	SetCollision(true, false, false);
-	CollisionRadius=45;
-	CollisionHeight=5;
+	SetCollisionSize(45, 5);
 
 	// Put on the floor
 	MoveActor(vect(0,0,-100));

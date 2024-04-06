@@ -332,8 +332,8 @@ var(Tick) float				LifeSpan			?("Force object to die after this many seconds has
 -----------------------------------------------------------------------------*/
 
 // Collision size.
-var(Collision) travel float	CollisionRadius		?("Radius of the collision cylinder.");
-var(Collision) travel float	CollisionHeight		?("Half the height of the collision cylinder.");
+var(Collision) travel const float	CollisionRadius		?("Radius of the collision cylinder.");
+var(Collision) travel const float	CollisionHeight		?("Half the height of the collision cylinder.");
 
 // Collision flags.
 var(Collision) travel const bool bCollideActors		?("Actor collides with other actors.");
