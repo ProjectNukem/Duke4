@@ -691,6 +691,9 @@ APlayerPawn* ULevel::SpawnPlayActor( UPlayer* Player, ENetRole RemoteRole, const
 	// Import properties.
 	for( i=0; i<Accepted.Num(); i++ )
 	{
+		if( Accepted(i).Actor->bCollideActors && Hash )
+			Hash->RemoveActor( Accepted(i).Actor );
+
 		// Parse all properties.
 		for( INT j=0; j<Accepted(i).Parms.Num(); j++ )
 		{
@@ -739,6 +742,9 @@ APlayerPawn* ULevel::SpawnPlayActor( UPlayer* Player, ENetRole RemoteRole, const
                 }
 			}
 		}
+
+		if( Accepted(i).Actor->bCollideActors && Hash )
+			Hash->AddActor( Accepted(i).Actor );
 	}
 
 	// Call travel-acceptance functions in reverse order to avoid inventory flipping.
