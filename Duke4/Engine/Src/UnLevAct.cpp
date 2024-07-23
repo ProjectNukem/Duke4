@@ -939,7 +939,7 @@ UBOOL ULevel::MoveActor
 		return 0;
 
 	// Skip if no vector.
-	if( Delta.IsNearlyZero() )
+	if( Delta.IsNearlyZero() || Delta.IsNan() )
 	{
 		if( NewRotation==Actor->Rotation )
 		{

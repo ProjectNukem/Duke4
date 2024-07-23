@@ -334,6 +334,13 @@ public:
 	{
 		return X==0.f && Y==0.f && Z==0.f;
 	}
+	__forceinline UBOOL IsNan() const
+	{
+		return
+				appIsNan(X)
+			||	appIsNan(Y)
+			||	appIsNan(Z);
+	}
 	__forceinline UBOOL Normalize()
 	{
 		FLOAT SquareSum = X*X+Y*Y+Z*Z;
@@ -599,6 +606,13 @@ public:
 	__forceinline UBOOL IsZero() const
 	{
 		return X==0.f && Y==0.f && Z==0.f;
+	}
+	__forceinline UBOOL IsNan() const
+	{
+		return
+				appIsNan(X)
+			||	appIsNan(Y)
+			||	appIsNan(Z);
 	}
 	__forceinline UBOOL Normalize()
 	{
