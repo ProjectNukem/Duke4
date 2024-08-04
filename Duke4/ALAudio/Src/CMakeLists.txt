@@ -31,4 +31,4 @@ target_include_directories(ALAudio PRIVATE
     ${CMAKE_SOURCE_DIR}/Render/Src
     ${CMAKE_SOURCE_DIR}/Engine/Src)
 
-target_compile_definitions(ALAudio PRIVATE UNICODE _UNICODE ALAUDIO_API="__declspec(dllexport)")
+target_compile_definitions(ALAudio PRIVATE UNICODE _UNICODE "ALAUDIO_API=__declspec(dllexport)")
