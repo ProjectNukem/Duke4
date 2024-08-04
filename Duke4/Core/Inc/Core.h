@@ -450,6 +450,7 @@ CORE_API extern class FGlobalMath		GMath;
 CORE_API extern	URenderDevice*			GRenderDevice;
 CORE_API extern class FArchive*         GDummySave;
 CORE_API extern DWORD					GCurrentViewport;
+CORE_API extern class FThreadFactory*	GThreadFactory;
 
 #if DNF
 CORE_API extern FDnExec*				GDnExec; // CDH
@@ -493,6 +494,7 @@ extern "C" DLL_EXPORT TCHAR GPackage[];
 #include "UnCid.h"          // Cache ID's.
 #include "UnBits.h"         // Bitstream archiver.
 #include "UnMath.h"         // Vector math functions.
+#include "UnThreadingBase.h"	// Threading support.
 
 typedef struct {
 	UBOOL bError;

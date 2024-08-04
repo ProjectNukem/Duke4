@@ -53,6 +53,41 @@ class ENGINE_API UAudioSubsystem : public USubsystem
 	virtual void MusicPlay(TCHAR *Prefix,TCHAR *Filename,UBOOL Instant=0,FLOAT CrossfadeTime=0.0f,UBOOL Push=0)=0;
 };
 
+//
+// Wrapper around old integer Ids used for Sound playback.
+//
+union FSoundId
+{
+	INT Id;
+	struct
+	{
+		BITFIELD bNoOverride : 1;
+		BITFIELD Slot : 3;
+		BITFIELD Index : 27;
+		BITFIELD bClient : 1;      // Set when Id is generated in Client NetMode.
+	};
+
+	// Constructors.
+	FSoundId()
+	{}
+	FSoundId(INT InId)
+		: Id(InId)
+	{}
+	FSoundId(AActor* InActor, ESoundSlot InSlot, UBOOL bInNoOverride, UBOOL bInClient = 0)
+		: Index(InActor->GetIndex())
+		, Slot(InSlot)
+		, bNoOverride(bInNoOverride)
+		, bClient(bInClient)
+	{}
+
+	// Operators.
+	UBOOL operator==(const FSoundId& Other) const
+	{
+		// Ignore bNoOverride here, as it's only used to resolve (Slot,Index) pair conflicts.
+		return Slot == Other.Slot && Index == Other.Index && bClient == Other.bClient;
+	}
+};
+
 /*-----------------------------------------------------------------------------
 	USound.
 -----------------------------------------------------------------------------*/

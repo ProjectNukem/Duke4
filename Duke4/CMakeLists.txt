@@ -79,6 +79,7 @@ include_directories($<$<COMPILE_LANGUAGE:C,CXX>:${CMAKE_SOURCE_DIR}/DirectX8/Inc
 link_directories(DirectX8/Lib)
 
 # Projects
+add_subdirectory(ALAudio)
 add_subdirectory(Cannibal)
 add_subdirectory(CannibalEditor)
 add_subdirectory(CblMacEd)

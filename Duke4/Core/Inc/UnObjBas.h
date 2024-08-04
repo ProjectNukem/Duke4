@@ -923,6 +923,27 @@ public:
     }
 };
 
+inline FString FObjectName(const UObject* Object)
+{
+	if (!Object)
+		return TEXT("None");
+	return Object->GetName();
+}
+
+inline FString FObjectPathName(const UObject* Object)
+{
+	if (!Object)
+		return TEXT("None");
+	return Object->GetPathName();
+}
+
+inline FString FObjectFullName(const UObject* Object, UBOOL DoubleNone = 0)
+{
+	if (!Object)
+		return DoubleNone ? TEXT("None None") : TEXT("None");
+	return Object->GetFullName();
+}
+
 /*----------------------------------------------------------------------------
 	Core templates.
 ----------------------------------------------------------------------------*/

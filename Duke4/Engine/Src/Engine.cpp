@@ -158,6 +158,7 @@ CORE_API FGlobalMath			GMath;							/* Math code */
 CORE_API URenderDevice*			GRenderDevice=NULL;				/* S3TC Support - Global pointer to current rendering device */
 CORE_API FArchive*				GDummySave=&GArchiveDummySave;	/* No-op save archive */
 CORE_API DWORD                  GCurrentViewport=0;             /* Pointer to the currently active UViewport - the one with the white outline */
+CORE_API FThreadFactory*		GThreadFactory=NULL;
 
 // Unicode.
 #if UNICODE

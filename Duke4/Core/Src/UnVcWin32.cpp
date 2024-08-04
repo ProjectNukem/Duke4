@@ -8,6 +8,7 @@
 
 // Core includes.
 #include "..\..\Engine\Src\EnginePrivate.h"
+#include "UnThreadingWindows.h"
 
 /*-----------------------------------------------------------------------------
 	Unicode helpers.
@@ -969,6 +970,8 @@ void appPlatformInit()
 	// FPU.
 	appEnableFastMath( 0 );
 
+	//
+	GThreadFactory = new FThreadFactoryWin;
 }
 void appPlatformPreExit()
 {

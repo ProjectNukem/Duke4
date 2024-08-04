@@ -10,6 +10,7 @@
 #define __WIN32__				1
 #define __INTEL__				1
 #define __INTEL_BYTE_ORDER__	1
+#define __UNREAL_X86__			1
 
 /*----------------------------------------------------------------------------
 	Platform specifics types and defines.
@@ -31,6 +32,15 @@
 #ifndef _WINDOWS_
 	#define HANDLE void*
 	#define HINSTANCE void*
+#endif
+
+#ifdef __UNREAL_X86__
+# ifndef USES_SSE_INTRINSICS
+#  define USES_SSE_INTRINSICS 1
+# endif
+# include <xmmintrin.h>
+# include <emmintrin.h>
+# include <intrin.h>
 #endif
 
 // Sizes.
