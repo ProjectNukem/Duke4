@@ -3037,6 +3037,11 @@ void UALAudioSubsystem::StopSoundBySlot(AActor* Actor, INT Id)
 
 void UALAudioSubsystem::Update( FPointRegion ListenerRegion, FCoords& ListenerCoords)
 {
+#if DNF
+	if( !Viewport )
+		return;
+#endif
+
 	ELevelTick TickType         = LEVELTICK_All;
 	FLOAT      DeltaTime        = UpdateTime();
 	AActor*    ListenerActor    = GetCameraActor();
