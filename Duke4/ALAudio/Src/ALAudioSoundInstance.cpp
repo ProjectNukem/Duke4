@@ -128,7 +128,7 @@ INT ALAudioSoundInstance::Update( const ALAudioSoundInstance::UpdateParams& Para
 		// Special hack for looping Weapon Sounds like GESBioRifle to prevent infinite loops. Check if Fire/AltFire is still pressed, otherwise stop the loop.
 #if DNF
 		APawn* Pawn = Cast<APawn>(Actor);
-		if (Pawn->Weapon && !Pawn->bFire && !Pawn->bAltFire )
+		if ( Pawn && Pawn->Weapon && !Pawn->bFire && !Pawn->bAltFire )
 		{
 			Stop();
 			return 0;
