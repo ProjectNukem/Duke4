@@ -175,11 +175,13 @@ bool sourceIsPlaying(ALuint sid)
 }
 void TransformCoordinates(ALfloat Dest[3], const FVector &Source)
 {
+#if DNF
+	Dest[0] = Source.Y;
+	Dest[1] = Source.Z;
+	Dest[2] = -Source.X;
+#else
 	Dest[0] = Source.X;
 	Dest[1] = Source.Y;
-#if DNF
-	Dest[2] = Source.Z;
-#else
 	Dest[2] = -Source.Z;
 #endif
 }
