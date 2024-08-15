@@ -3526,7 +3526,7 @@ void __fastcall URender::OccludeProjector(FSceneNode* Frame, INT ProjectorIndex)
 	}
 }
 // ...JEP
-
+#pragma DISABLE_OPTIMIZATION
 void __fastcall URender::OccludeBsp( FSceneNode* Frame )
 {
 	UModel*				Model;
@@ -4206,6 +4206,7 @@ void __fastcall URender::OccludeBsp( FSceneNode* Frame )
 		Pass		= Stack->Pass;
 	}
 }
+#pragma ENABLE_OPTIMIZATION
 
 /*-----------------------------------------------------------------------------
 	Span buffer Bsp rendering.
