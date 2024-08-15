@@ -1656,7 +1656,7 @@ void FLightManager::SetupForSurf
 	FBspSurf& Surf				= Level->Model->Surfs(Draw->iSurf);
 	AMover* Mover				= (Frame->Level->BrushTracker && Frame->Level->BrushTracker->SurfIsDynamic(Draw->iSurf)) ?  (AMover*)Surf.Actor : NULL;
 	UModel* Model				= Mover ? Mover->Brush : Level->Model;
-	FLightMapIndex* Index		= &Model->LightMap(iLightMap);
+	FLightMapIndex* Index		= Model->LightMap.Num() > 0 ? &Model->LightMap(iLightMap) : NULL;
 	Zone						= Draw->Zone;
 	BYTE ZoneID					= Zone ? Zone->Region.ZoneNumber : 255;
 	LastLight					= FirstLight;
@@ -1665,9 +1665,9 @@ void FLightManager::SetupForSurf
 	MovingLights				= 0;
 	StaticLightingChanged		= 0;
 	MapCoords					= &InMapCoords;
-	ShadowMaskU					= (Index->UClamp+7) >> 3;
-	ShadowMaskSpace				= ShadowMaskU * Index->VClamp;
-	ShadowSkip					= ShadowMaskU*8 - Index->UClamp;
+	ShadowMaskU					= Index ? (Index->UClamp+7) >> 3 : 0;
+	ShadowMaskSpace				= ShadowMaskU * (Index ? Index->VClamp : 0);
+	ShadowSkip					= ShadowMaskU*8 - (Index ? Index->UClamp : 0);
 	OutLightMap					= &LightMap;
 
 	// Handle lighting.
@@ -1676,11 +1676,14 @@ void FLightManager::SetupForSurf
 		Mover = NULL;
 
 		// Static lights.
-		BYTE* ShadowBase = &Model->LightBits(Index->DataOffset);
-		if( Index->iLightActors != INDEX_NONE )
-			for( INT i=0; Model->Lights(i+Index->iLightActors); i++,ShadowBase+=ShadowMaskSpace )
-				if( AddLight( Mover, Model->Lights(i+Index->iLightActors) ) )
-					LastLight[-1].ShadowBits = ShadowBase;
+		if( Index )
+		{
+			BYTE* ShadowBase = &Model->LightBits(Index->DataOffset);
+			if( Index->iLightActors != INDEX_NONE )
+				for( INT i=0; Model->Lights(i+Index->iLightActors); i++,ShadowBase+=ShadowMaskSpace )
+					if( AddLight( Mover, Model->Lights(i+Index->iLightActors) ) )
+						LastLight[-1].ShadowBits = ShadowBase;
+		}
 
 		// Dynamic lights.
 		for( FActorLink* Link=Draw->SurfLights; Link; Link=Link->Next )
@@ -1734,15 +1737,15 @@ void FLightManager::SetupForSurf
 		}
 
 		// Setup FogMip and FogMap.
-		FogMip.UBits			= appCeilLogTwo(Index->UClamp);
-		FogMip.VBits			= appCeilLogTwo(Index->VClamp);
+		FogMip.UBits			= Index ? appCeilLogTwo(Index->UClamp) : 0;
+		FogMip.VBits			= Index ? appCeilLogTwo(Index->VClamp) : 0;
 		FogMip.USize			= 1 << FogMip.UBits;
 		FogMip.VSize			= 1 << FogMip.VBits;
-		FogMap.Pan				= Index->Pan;
-		FogMap.UScale			= Index->UScale;
-		FogMap.VScale			= Index->VScale;
-		FogMap.UClamp			= Index->UClamp;
-		FogMap.VClamp			= Index->VClamp;
+		FogMap.Pan				= Index ? Index->Pan : FVector(0, 0, 0);
+		FogMap.UScale			= Index ? Index->UScale : 0;
+		FogMap.VScale			= Index ? Index->VScale : 0;
+		FogMap.UClamp			= Index ? Index->UClamp : 0;
+		FogMap.VClamp			= Index ? Index->VClamp : 0;
 		FogMap.USize			= FogMip.USize;
 		FogMap.VSize			= FogMip.VSize;
 		FogMap.bRealtimeChanged = 1;
@@ -1816,15 +1819,15 @@ void FLightManager::SetupForSurf
 	}
 
 	// Set up LightMip and LightMap.
-	LightMip.UBits			= appCeilLogTwo(Index->UClamp);
-	LightMip.VBits			= appCeilLogTwo(Index->VClamp);
+	LightMip.UBits			= Index ? appCeilLogTwo(Index->UClamp) : 0;
+	LightMip.VBits			= Index ? appCeilLogTwo(Index->VClamp) : 0;
 	LightMip.USize			= 1 << LightMip.UBits;
 	LightMip.VSize			= 1 << LightMip.VBits;
-	LightMap.Pan			= Index->Pan;
-	LightMap.UScale			= Index->UScale;
-	LightMap.VScale			= Index->VScale;
-	LightMap.UClamp			= Index->UClamp;
-	LightMap.VClamp			= Index->VClamp;
+	LightMap.Pan			= Index ? Index->Pan : FVector(0, 0, 0);
+	LightMap.UScale			= Index ? Index->UScale : 0;
+	LightMap.VScale			= Index ? Index->VScale : 0;
+	LightMap.UClamp			= Index ? Index->UClamp : 0;
+	LightMap.VClamp			= Index ? Index->VClamp : 0;
 	LightMap.USize			= LightMip.USize;
 	LightMap.VSize			= LightMip.VSize;
 	LightMap.CacheID		= MakeCacheID( CID_StaticMap, iLightMap, ZoneID, Model );
